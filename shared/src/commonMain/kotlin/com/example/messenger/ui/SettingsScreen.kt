@@ -32,72 +32,7 @@ fun SettingsScreen(
     val updateInfo by viewModel.updateInfo.collectAsState()
     val isCheckingUpdate by viewModel.isCheckingUpdate.collectAsState()
 
-    fun str(key: String): String {
-        val ru = mapOf(
-            "settings" to "Настройки",
-            "appearance" to "Внешний вид",
-            "theme" to "Тема",
-            "theme_system" to "Системная",
-            "theme_light" to "Светлая",
-            "theme_dark" to "Темная",
-            "language" to "Язык",
-            "notifications" to "Уведомления",
-            "enable_notifications" to "Включить уведомления",
-            "security" to "Безопасность",
-            "panic_config" to "Настройка паники",
-            "delete_contacts" to "Удалить контакты",
-            "delete_messages" to "Удалить сообщения",
-            "delete_keys" to "Удалить ключи",
-            "auto_lock" to "Автоблокировка",
-            "disabled" to "Отключено",
-            "min" to "мин",
-            "app_updates" to "Обновление приложения",
-            "check_update" to "Проверить обновления",
-            "checking" to "Проверка...",
-            "update_available" to "Доступно обновление: ",
-            "install" to "Установить",
-            "danger_zone" to "Опасная зона",
-            "clear_all_data" to "Удалить все данные",
-            "clear_dialog_title" to "Удалить все данные",
-            "clear_dialog_text" to "Вы уверены? Это действие необратимо удалит все контакты и сообщения.",
-            "delete_all" to "Удалить все",
-            "cancel" to "Отмена"
-        )
-        if (language == "ru") return ru[key] ?: key
-        
-        // English defaults
-        val en = mapOf(
-            "settings" to "Settings",
-            "appearance" to "Appearance",
-            "theme" to "Theme",
-            "theme_system" to "System",
-            "theme_light" to "Light",
-            "theme_dark" to "Dark",
-            "language" to "Language",
-            "notifications" to "Notifications",
-            "enable_notifications" to "Enable Notifications",
-            "security" to "Security",
-            "panic_config" to "Panic Button Configuration",
-            "delete_contacts" to "Delete Contacts",
-            "delete_messages" to "Delete Messages",
-            "delete_keys" to "Delete Keys",
-            "auto_lock" to "Auto Lock",
-            "disabled" to "Disabled",
-            "min" to "min",
-            "app_updates" to "App Updates",
-            "check_update" to "Check for Updates",
-            "checking" to "Checking...",
-            "update_available" to "Update Available: ",
-            "install" to "Install",
-            "danger_zone" to "Danger Zone",
-            "clear_all_data" to "Clear All Data",
-            "clear_dialog_title" to "Clear All Data",
-            "clear_dialog_text" to "Are you sure? This cannot be undone.",
-            "delete_all" to "Delete All",
-            "cancel" to "Cancel"
-        )
-        return en[key] ?: key
-    }
+    val str: (String) -> String = { Strings.get(it, language) }
 
     Scaffold(
         topBar = {

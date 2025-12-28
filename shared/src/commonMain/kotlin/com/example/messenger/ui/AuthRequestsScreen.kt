@@ -18,14 +18,15 @@ fun AuthRequestsScreen(
     onBack: () -> Unit
 ) {
     val requests by viewModel.authRequests.collectAsState()
+    val language by viewModel.language.collectAsState()
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Auth Requests") },
+                title = { Text(Strings.get("auth_requests", language)) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.Default.ArrowBack, contentDescription = Strings.get("cancel", language))
                     }
                 }
             )
@@ -35,6 +36,7 @@ fun AuthRequestsScreen(
             items(requests) { request ->
                 AuthRequestItem(
                     request = request,
+                    language = language,
                     onAccept = { viewModel.acceptAuthRequest(request) },
                     onReject = { viewModel.rejectAuthRequest(request) }
                 )
@@ -46,22 +48,23 @@ fun AuthRequestsScreen(
 @Composable
 fun AuthRequestItem(
     request: AuthRequest,
+    language: String,
     onAccept: () -> Unit,
     onReject: () -> Unit
 ) {
     Card(modifier = Modifier.padding(8.dp).fillMaxWidth()) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Text("Device: ${request.model}")
-            Text("Key: ${request.publicKey.take(8)}...", style = MaterialTheme.typography.caption)
+            Text("${Strings.get("device", language)}: ${request.model}")
+            Text("${Strings.get("public_key", language)}: ${request.publicKey.take(8)}...", style = MaterialTheme.typography.caption)
             Spacer(modifier = Modifier.height(8.dp))
             Row {
-                Button(onClick = onAccept) { Text("Accept") }
+                Button(onClick = onAccept) { Text(Strings.get("accept", language)) }
                 Spacer(modifier = Modifier.width(8.dp))
                 Button(
                     onClick = onReject, 
                     colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.error)
                 ) { 
-                    Text("Reject") 
+                    Text(Strings.get("reject", language)) 
                 }
             }
         }

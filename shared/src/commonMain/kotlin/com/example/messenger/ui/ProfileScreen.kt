@@ -21,6 +21,7 @@ fun ProfileScreen(
     onBack: () -> Unit
 ) {
     val myPublicKey = viewModel.myPublicKey
+    val language by viewModel.language.collectAsState()
     val clipboardManager = LocalClipboardManager.current
     val qrCode = remember(myPublicKey) {
         QRCodeGenerator.generateQRCode(myPublicKey)
@@ -29,10 +30,10 @@ fun ProfileScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("My Profile") },
+                title = { Text(Strings.get("my_profile", language)) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = Strings.get("cancel", language))
                     }
                 }
             )
@@ -45,17 +46,17 @@ fun ProfileScreen(
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text("My Public Key", style = MaterialTheme.typography.h6)
+            Text(Strings.get("my_public_key", language), style = MaterialTheme.typography.h6)
             Spacer(modifier = Modifier.height(8.dp))
             
             if (qrCode != null) {
                 Image(
                     bitmap = qrCode,
-                    contentDescription = "Public Key QR Code",
+                    contentDescription = Strings.get("public_key", language),
                     modifier = Modifier.size(256.dp)
                 )
             } else {
-                Text("Error generating QR Code")
+                Text(Strings.get("qr_error", language))
             }
             
             Spacer(modifier = Modifier.height(16.dp))
@@ -64,7 +65,7 @@ fun ProfileScreen(
                 value = myPublicKey,
                 onValueChange = {},
                 readOnly = true,
-                label = { Text("Public Key") },
+                label = { Text(Strings.get("public_key", language)) },
                 modifier = Modifier.fillMaxWidth()
             )
             
@@ -73,7 +74,7 @@ fun ProfileScreen(
             Button(onClick = {
                 clipboardManager.setText(AnnotatedString(myPublicKey))
             }) {
-                Text("Copy to Clipboard")
+                Text(Strings.get("copy_clipboard", language))
             }
         }
     }

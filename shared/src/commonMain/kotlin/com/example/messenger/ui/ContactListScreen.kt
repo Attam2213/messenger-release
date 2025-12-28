@@ -24,6 +24,7 @@ fun ContactListScreen(
     val contacts by viewModel.contacts.collectAsState(initial = emptyList())
     val groups by viewModel.groups.collectAsState(initial = emptyList())
     val pollingStatus by viewModel.pollingStatus.collectAsState()
+    val language by viewModel.language.collectAsState()
     
     // Simple state for now
     var searchQuery by remember { mutableStateOf("") }
@@ -78,7 +79,7 @@ fun ContactListScreen(
             if (groups.isNotEmpty()) {
                 item {
                     Text(
-                        "Groups",
+                        Strings.get("groups", language),
                         style = MaterialTheme.typography.subtitle1,
                         modifier = Modifier.padding(8.dp)
                     )
@@ -96,7 +97,7 @@ fun ContactListScreen(
             // Contacts
             item {
                 Text(
-                    "Contacts",
+                    Strings.get("contacts", language),
                     style = MaterialTheme.typography.subtitle1,
                     modifier = Modifier.padding(8.dp)
                 )
@@ -114,6 +115,7 @@ fun ContactListScreen(
         if (showDialog) {
             AddContactGroupDialog(
                 contacts = contacts,
+                language = language,
                 onDismiss = { showDialog = false },
                 onAddContact = { name, key ->
                     viewModel.addContact(name, key) { success, _ ->
@@ -169,6 +171,7 @@ fun ContactItem(
 @Composable
 fun AddContactGroupDialog(
     contacts: List<ContactEntity>,
+    language: String,
     onDismiss: () -> Unit,
     onAddContact: (String, String) -> Unit,
     onCreateGroup: (String, List<String>) -> Unit
@@ -180,7 +183,7 @@ fun AddContactGroupDialog(
     
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(if (isGroupMode) "Create Group" else "Add Contact") },
+        title = { Text(if (isGroupMode) Strings.get("create_group", language) else Strings.get("add_contact", language)) },
         text = {
             Column(modifier = Modifier.fillMaxWidth()) {
                 Row(modifier = Modifier.padding(bottom = 16.dp)) {
@@ -188,27 +191,27 @@ fun AddContactGroupDialog(
                         onClick = { isGroupMode = false },
                         enabled = isGroupMode
                     ) {
-                        Text("Contact")
+                        Text(Strings.get("contact", language))
                     }
                     TextButton(
                         onClick = { isGroupMode = true },
                         enabled = !isGroupMode
                     ) {
-                        Text("Group")
+                        Text(Strings.get("group", language))
                     }
                 }
                 
                 OutlinedTextField(
                     value = name,
                     onValueChange = { name = it },
-                    label = { Text("Name") },
+                    label = { Text(Strings.get("name", language)) },
                     modifier = Modifier.fillMaxWidth()
                 )
                 
                 Spacer(modifier = Modifier.height(8.dp))
                 
                 if (isGroupMode) {
-                    Text("Select Members:", style = MaterialTheme.typography.subtitle2)
+                    Text(Strings.get("select_members", language), style = MaterialTheme.typography.subtitle2)
                     LazyColumn(
                         modifier = Modifier.height(200.dp).fillMaxWidth()
                     ) {
@@ -242,7 +245,7 @@ fun AddContactGroupDialog(
                         OutlinedTextField(
                             value = publicKey,
                             onValueChange = { publicKey = it },
-                            label = { Text("Public Key") },
+                            label = { Text(Strings.get("public_key", language)) },
                             modifier = Modifier.weight(1f)
                         )
                         Spacer(modifier = Modifier.width(8.dp))
@@ -266,12 +269,12 @@ fun AddContactGroupDialog(
                 },
                 enabled = name.isNotBlank() && (if (isGroupMode) selectedMembers.isNotEmpty() else publicKey.isNotBlank())
             ) {
-                Text(if (isGroupMode) "Create" else "Add")
+                Text(if (isGroupMode) Strings.get("save", language) else Strings.get("add", language))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Cancel")
+                Text(Strings.get("cancel", language))
             }
         }
     )

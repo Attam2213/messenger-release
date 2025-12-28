@@ -8,6 +8,8 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -20,6 +22,8 @@ fun DrawerContent(
     onNavigate: (Screen) -> Unit,
     closeDrawer: () -> Unit
 ) {
+    val language by viewModel.language.collectAsState()
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -59,7 +63,7 @@ fun DrawerContent(
         // Menu Items
         DrawerItem(
             icon = Icons.Default.Contacts,
-            text = "Contacts",
+            text = Strings.get("contacts", language),
             onClick = {
                 onNavigate(Screen.ContactList)
                 closeDrawer()
@@ -68,7 +72,7 @@ fun DrawerContent(
         
         DrawerItem(
             icon = Icons.Default.Person,
-            text = "Profile",
+            text = Strings.get("profile", language),
             onClick = {
                 onNavigate(Screen.Profile)
                 closeDrawer()
@@ -77,7 +81,7 @@ fun DrawerContent(
 
         DrawerItem(
             icon = Icons.Default.Security,
-            text = "Auth Requests",
+            text = Strings.get("auth_requests", language),
             onClick = {
                 onNavigate(Screen.AuthRequests)
                 closeDrawer()
@@ -86,7 +90,7 @@ fun DrawerContent(
 
         DrawerItem(
             icon = Icons.Default.Settings,
-            text = "Settings",
+            text = Strings.get("settings", language),
             onClick = {
                 onNavigate(Screen.Settings)
                 closeDrawer()
@@ -98,7 +102,7 @@ fun DrawerContent(
         
         DrawerItem(
             icon = Icons.Default.ExitToApp,
-            text = "Logout",
+            text = Strings.get("logout", language),
             onClick = {
                 viewModel.logout {
                     // Navigate to onboarding or restart
