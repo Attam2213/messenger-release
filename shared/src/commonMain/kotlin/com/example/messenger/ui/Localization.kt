@@ -136,8 +136,17 @@ object Strings {
         "danger_zone" to "Danger Zone",
         "clear_all_data" to "Clear All Data",
         "clear_dialog_title" to "Clear All Data",
-        "clear_dialog_text" to "Are you sure? This cannot be undone.",
-        "delete_all" to "Delete All"
+        "clear_dialog_text" to "Are you sure? This action will irreversibly delete all contacts and messages.",
+        "delete_all" to "Delete All",
+        
+        // Backup
+        "backup_restore" to "Backup & Restore",
+        "export_backup" to "Export Backup",
+        "import_backup" to "Import Backup",
+        "backup_password_hint" to "Encryption Password (Optional)",
+        "backup_filename_hint" to "Filename in Downloads",
+        "export" to "Export",
+        "import" to "Import"
     )
 
     fun get(key: String, language: String): String {

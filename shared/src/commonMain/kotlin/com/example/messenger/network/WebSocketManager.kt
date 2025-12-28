@@ -44,6 +44,7 @@ class WebSocketManager(
         scope.launch {
             try {
                 _connectionError.emit(null)
+                // Use default session if possible or raw websocket
                 client.webSocket(
                     method = HttpMethod.Get,
                     host = AppConfig.BASE_URL,
@@ -52,11 +53,13 @@ class WebSocketManager(
                 ) {
                     isConnected = true
                     _connectionStatus.emit(true)
+                    println("WebSocket Connected: $myHash")
                     
                     try {
                         for (frame in incoming) {
                             frame as? Frame.Text ?: continue
                             val text = frame.readText()
+                            println("WebSocket Message: $text")
                             _incomingMessages.emit(text)
                         }
                     } catch (e: Exception) {
@@ -65,9 +68,11 @@ class WebSocketManager(
                     } finally {
                         isConnected = false
                         _connectionStatus.emit(false)
+                        println("WebSocket Disconnected")
                     }
                 }
             } catch (e: Exception) {
+                e.printStackTrace()
                 isConnected = false
                 _connectionStatus.emit(false)
                 _connectionError.emit(e.message)
@@ -80,6 +85,7 @@ class WebSocketManager(
         scope.launch {
             delay(5000)
             if (isActive) {
+                println("WebSocket Reconnecting...")
                 connect(myHash)
             }
         }

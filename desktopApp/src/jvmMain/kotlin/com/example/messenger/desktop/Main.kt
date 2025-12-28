@@ -74,6 +74,7 @@ fun main() {
             val desktopCallHandler = remember { DesktopCallHandler() }
             val notificationHandler = remember { DesktopNotificationHandler() }
             val appUpdater = remember { AppUpdater(null) }
+            val fileHandler = remember { FileHandler(null) }
             
             val viewModel = remember { 
                 SharedMessengerViewModel(
@@ -88,6 +89,7 @@ fun main() {
                     desktopCallHandler,
                     notificationHandler,
                     appUpdater,
+                    fileHandler,
                     applicationScope
                 )
             }

@@ -52,7 +52,21 @@ actual class AppUpdater actual constructor(context: Any?) {
     }
 
     actual fun downloadAndInstall(url: String, fileName: String, onProgress: ((Float) -> Unit)?) {
-        val request = DownloadManager.Request(Uri.parse(url))
+        // Delete existing file to prevent caching/stale updates
+        try {
+            val destDir = ctx.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
+            val destFile = File(destDir, fileName)
+            if (destFile.exists()) {
+                destFile.delete()
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+        // Add timestamp to URL to bypass cache
+        val downloadUrl = if (url.contains("?")) "$url&t=${System.currentTimeMillis()}" else "$url?t=${System.currentTimeMillis()}"
+        
+        val request = DownloadManager.Request(Uri.parse(downloadUrl))
         request.setTitle("Downloading Update")
         request.setDescription("Downloading $fileName")
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
@@ -80,12 +94,15 @@ actual class AppUpdater actual constructor(context: Any?) {
                         }
 
                         val status = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS))
-                        if (status == DownloadManager.STATUS_SUCCESSFUL || status == DownloadManager.STATUS_FAILED) {
+                        if (status == DownloadManager.STATUS_SUCCESSFUL) {
+                            onProgress(1f)
+                            downloading = false
+                        } else if (status == DownloadManager.STATUS_FAILED) {
                             downloading = false
                         }
                     }
                     cursor.close()
-                    kotlinx.coroutines.delay(500)
+                    kotlinx.coroutines.delay(200) // Update more frequently
                 }
             }
         }

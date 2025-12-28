@@ -72,6 +72,12 @@ class MessageSynchronizationUseCase(
 
         if (cryptoManager.hasIdentity()) {
             val myHash = cryptoManager.getMyPublicKeyHash()
+            // Initial sync
+            try {
+                forceSync()
+            } catch (e: Exception) {
+                // Ignore initial sync error
+            }
             webSocketManager.connect(myHash)
         }
          
@@ -120,7 +126,7 @@ class MessageSynchronizationUseCase(
                     }
                     if (addedCount > 0) {
                          _status.value = SyncStatus.Downloaded(addedCount)
-                         delay(3000)
+                         delay(1000)
                          _status.value = SyncStatus.Connected
                     } else {
                         if (_status.value is SyncStatus.Connecting || _status.value is SyncStatus.Error) {
@@ -129,9 +135,12 @@ class MessageSynchronizationUseCase(
                     }
                 }
             } catch (e: Exception) {
-                _status.value = SyncStatus.Error(e.message ?: "Polling Error")
+                // Keep silent on polling error to avoid spamming status
+                if (_status.value !is SyncStatus.Connected) {
+                     _status.value = SyncStatus.Error(e.message ?: "Polling Error")
+                }
             }
-            delay(60000)
+            delay(3000) // Poll every 3 seconds for near real-time fallback
         }
     }
 }

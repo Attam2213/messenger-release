@@ -15,6 +15,14 @@ import com.example.messenger.shared.infrastructure.NotificationHandler
 import com.example.messenger.shared.utils.SharedSettingsManager
 import com.example.messenger.shared.utils.AppUpdater
 import com.example.messenger.shared.utils.UpdateInfo
+import com.example.messenger.shared.utils.FileHandler
+import com.example.messenger.domain.model.BackupData
+import com.example.messenger.domain.model.BackupContact
+import com.example.messenger.domain.model.BackupMessage
+import com.example.messenger.domain.model.BackupGroup
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.decodeFromString
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
@@ -33,6 +41,7 @@ class SharedMessengerViewModel(
     private val callHandler: CallHandler?,
     private val notificationHandler: NotificationHandler?,
     private val appUpdater: AppUpdater?,
+    private val fileHandler: FileHandler?,
     private val scope: CoroutineScope
 ) {
 
@@ -59,6 +68,9 @@ class SharedMessengerViewModel(
 
     private val _isDownloading = MutableStateFlow(false)
     val isDownloading: StateFlow<Boolean> = _isDownloading.asStateFlow()
+
+    private val _isBackupProcessing = MutableStateFlow(false)
+    val isBackupProcessing: StateFlow<Boolean> = _isBackupProcessing.asStateFlow()
 
     // Typing Status
     private val _typingStatuses = MutableStateFlow<Map<String, Boolean>>(emptyMap())
@@ -359,6 +371,106 @@ class SharedMessengerViewModel(
             _downloadProgress.value = progress
             if (progress >= 1f) {
                 _isDownloading.value = false
+            }
+        }
+    }
+
+    // Backup & Restore
+    fun exportBackup(password: String? = null) {
+        scope.launch {
+            _isBackupProcessing.value = true
+            try {
+                val privateKey = cryptoManager.getMyPrivateKeyString()
+                val contacts = repository.getAllContactsSnapshot()
+                val groups = repository.getAllGroupsSnapshot()
+                val messages = repository.getAllMessagesSnapshot()
+
+                val backupContacts = contacts.map { BackupContact(it.publicKey, it.name, it.createdAt) }
+                val backupGroups = groups.map { BackupGroup(it.groupId, it.name, it.members, it.createdAt) }
+                val backupMessages = messages.map { 
+                    BackupMessage(
+                        it.messageId, it.fromPublicKey, it.toPublicKey, it.groupId, 
+                        it.encryptedContent, it.timestamp, it.isDelivered, it.isRead
+                    )
+                }
+
+                val backupData = BackupData(
+                    privateKey = privateKey,
+                    contacts = backupContacts,
+                    messages = backupMessages,
+                    groups = backupGroups
+                )
+
+                val jsonString = Json.encodeToString(backupData)
+                
+                val finalContent = if (!password.isNullOrEmpty()) {
+                    cryptoManager.encryptWithPassword(jsonString, password)
+                } else {
+                    jsonString
+                }
+
+                val fileName = "messenger_backup_${Clock.System.now().toEpochMilliseconds()}.json"
+                
+                val path = fileHandler?.saveBackup(finalContent, fileName)
+                
+                if (path != null) {
+                    notificationHandler?.showNotification("Backup", "Backup saved to $path")
+                } else {
+                    notificationHandler?.showNotification("Backup", "Failed to save backup")
+                }
+            } catch (e: Exception) {
+                notificationHandler?.showNotification("Backup", "Error: ${e.message}")
+            } finally {
+                _isBackupProcessing.value = false
+            }
+        }
+    }
+
+    fun importBackup(fileName: String, password: String? = null) {
+        scope.launch {
+            _isBackupProcessing.value = true
+            try {
+                val content = fileHandler?.readBackup(fileName)
+                if (content == null) {
+                    notificationHandler?.showNotification("Restore", "File not found in Downloads: $fileName")
+                    _isBackupProcessing.value = false
+                    return@launch
+                }
+
+                val jsonString = if (!password.isNullOrEmpty()) {
+                     cryptoManager.decryptWithPassword(content, password)
+                } else {
+                    content
+                }
+                
+                val backupData = Json.decodeFromString<BackupData>(jsonString)
+                
+                // Restore Identity
+                if (backupData.privateKey.isNotEmpty()) {
+                    cryptoManager.importIdentity(backupData.privateKey)
+                    cryptoManager.reloadKeys()
+                }
+                
+                // Restore Data
+                val contacts = backupData.contacts.map { 
+                    ContactEntity(it.publicKey, it.name, it.createdAt) 
+                }
+                val groups = backupData.groups.map { 
+                    GroupEntity(it.groupId, it.name, it.members, it.createdAt) 
+                }
+                val messages = backupData.messages.map { 
+                    MessageEntity(it.messageId, it.fromPublicKey, it.toPublicKey, it.encryptedContent, it.timestamp, it.isDelivered, null, it.isRead, it.groupId) 
+                }
+                
+                repository.restoreBackup(contacts, messages, groups)
+                
+                notificationHandler?.showNotification("Restore", "Backup restored successfully")
+                refreshMessages()
+                
+            } catch (e: Exception) {
+                notificationHandler?.showNotification("Restore", "Error: ${e.message}")
+            } finally {
+                _isBackupProcessing.value = false
             }
         }
     }

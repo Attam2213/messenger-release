@@ -18,6 +18,8 @@ fun SettingsScreen(
     onBack: () -> Unit
 ) {
     var showClearDialog by remember { mutableStateOf(false) }
+    var showExportDialog by remember { mutableStateOf(false) }
+    var showImportDialog by remember { mutableStateOf(false) }
     
     // Settings States
     val themeMode by viewModel.themeMode.collectAsState()
@@ -33,6 +35,8 @@ fun SettingsScreen(
     val isCheckingUpdate by viewModel.isCheckingUpdate.collectAsState()
     val isDownloading by viewModel.isDownloading.collectAsState()
     val downloadProgress by viewModel.downloadProgress.collectAsState()
+    
+    val isBackupProcessing by viewModel.isBackupProcessing.collectAsState()
 
     val str: (String) -> String = { Strings.get(it, language) }
 
@@ -193,6 +197,10 @@ fun SettingsScreen(
             }
 
             // App Updates
+            Spacer(modifier = Modifier.height(16.dp))
+            Divider()
+            Spacer(modifier = Modifier.height(16.dp))
+            
             Text(str("app_updates"), style = MaterialTheme.typography.h6, color = MaterialTheme.colors.primary)
             Spacer(modifier = Modifier.height(8.dp))
 
@@ -232,6 +240,37 @@ fun SettingsScreen(
                          Text(str("check_update"))
                      }
                  }
+            }
+
+            // Backup & Restore
+            Spacer(modifier = Modifier.height(24.dp))
+            Divider()
+            Spacer(modifier = Modifier.height(24.dp))
+
+            Text(str("backup_restore"), style = MaterialTheme.typography.h6, color = MaterialTheme.colors.primary)
+            Spacer(modifier = Modifier.height(8.dp))
+            
+            if (isBackupProcessing) {
+                LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+                Spacer(modifier = Modifier.height(8.dp))
+            } else {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Button(
+                        onClick = { showExportDialog = true },
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text(str("export"))
+                    }
+                    Button(
+                        onClick = { showImportDialog = true },
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text(str("import"))
+                    }
+                }
             }
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -275,5 +314,116 @@ fun SettingsScreen(
                 }
             )
         }
+
+        if (showExportDialog) {
+            ExportBackupDialog(
+                onDismiss = { showExportDialog = false },
+                onExport = { pwd -> 
+                    viewModel.exportBackup(pwd)
+                    showExportDialog = false
+                },
+                str = str
+            )
+        }
+    
+        if (showImportDialog) {
+            ImportBackupDialog(
+                onDismiss = { showImportDialog = false },
+                onImport = { file, pwd ->
+                    viewModel.importBackup(file, pwd)
+                    showImportDialog = false
+                },
+                str = str
+            )
+        }
     }
+}
+
+@Composable
+fun ExportBackupDialog(
+    onDismiss: () -> Unit,
+    onExport: (String?) -> Unit,
+    str: (String) -> String
+) {
+    var password by remember { mutableStateOf("") }
+    
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(str("export_backup")) },
+        text = {
+            Column {
+                Text(str("backup_password_hint"))
+                Spacer(modifier = Modifier.height(8.dp))
+                OutlinedTextField(
+                    value = password,
+                    onValueChange = { password = it },
+                    label = { Text("Password") },
+                    singleLine = true
+                )
+            }
+        },
+        confirmButton = {
+            Button(onClick = { onExport(password.ifEmpty { null }) }) {
+                Text(str("ok"))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(str("cancel"))
+            }
+        }
+    )
+}
+
+@Composable
+fun ImportBackupDialog(
+    onDismiss: () -> Unit,
+    onImport: (String, String?) -> Unit,
+    str: (String) -> String
+) {
+    var fileName by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+    
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(str("import_backup")) },
+        text = {
+            Column {
+                Text(str("backup_filename_hint"))
+                Spacer(modifier = Modifier.height(8.dp))
+                OutlinedTextField(
+                    value = fileName,
+                    onValueChange = { fileName = it },
+                    label = { Text("Filename") },
+                    singleLine = true
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(str("backup_password_hint"))
+                Spacer(modifier = Modifier.height(8.dp))
+                OutlinedTextField(
+                    value = password,
+                    onValueChange = { password = it },
+                    label = { Text("Password") },
+                    singleLine = true
+                )
+            }
+        },
+        confirmButton = {
+            Button(
+                onClick = { 
+                    if (fileName.isNotEmpty()) {
+                        onImport(fileName, password.ifEmpty { null }) 
+                    }
+                },
+                enabled = fileName.isNotEmpty()
+            ) {
+                Text(str("ok"))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(str("cancel"))
+            }
+        }
+    )
 }

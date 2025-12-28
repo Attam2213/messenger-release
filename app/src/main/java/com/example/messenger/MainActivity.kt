@@ -37,6 +37,7 @@ import com.example.messenger.viewmodel.CallViewModel
 import com.example.messenger.viewmodel.SharedMessengerViewModel
 import com.example.messenger.ui.App as SharedApp
 import com.example.messenger.infrastructure.AndroidNotificationHandler
+import com.example.messenger.shared.utils.FileHandler
 
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
@@ -296,6 +297,7 @@ fun MainContent() {
     val context = LocalContext.current
     val app = context.applicationContext as MessengerApplication
     val notificationHandler = remember { AndroidNotificationHandler(context) }
+    val fileHandler = remember { FileHandler(context) }
     
     val sharedViewModel = remember {
         SharedMessengerViewModel(
@@ -310,6 +312,7 @@ fun MainContent() {
             callHandler = app.androidCallHandler, 
             notificationHandler = notificationHandler,
             appUpdater = app.appUpdater,
+            fileHandler = fileHandler,
             scope = app.applicationScope
         )
     }

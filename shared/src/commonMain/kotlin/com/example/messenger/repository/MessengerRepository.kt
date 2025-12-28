@@ -57,6 +57,9 @@ class MessengerRepository(
             .asFlow()
             .mapToList(Dispatchers.IO)
 
+    suspend fun getAllContactsSnapshot(): List<ContactEntity> = 
+        sharedDb.contactEntityQueries.getAllContacts().executeAsList()
+
     suspend fun insertContact(contact: ContactEntity) = 
         sharedDb.contactEntityQueries.insertContact(contact)
     
@@ -82,6 +85,9 @@ class MessengerRepository(
         sharedDb.groupEntityQueries.getAllGroups()
             .asFlow()
             .mapToList(Dispatchers.IO)
+
+    suspend fun getAllGroupsSnapshot(): List<GroupEntity> = 
+        sharedDb.groupEntityQueries.getAllGroups().executeAsList()
 
     suspend fun getGroupById(groupId: String): GroupEntity? = 
         sharedDb.groupEntityQueries.getGroupById(groupId).executeAsOneOrNull()
@@ -150,6 +156,31 @@ class MessengerRepository(
             sharedDb.groupEntityQueries.clearAll()
             sharedDb.contactEntityQueries.deleteAll()
             sharedDb.outboxEntityQueries.clearAll()
+        }
+    }
+
+    suspend fun restoreBackup(
+        contacts: List<ContactEntity>,
+        messages: List<MessageEntity>,
+        groups: List<GroupEntity>
+    ) {
+        sharedDb.transaction {
+            // Clear existing data? Or merge? 
+            // Usually restore overwrites or merges. 
+            // Let's merge (insert or ignore is default for some, but usually replace).
+            // For now, let's assume clean restore or merge.
+            
+            contacts.forEach { contact ->
+                sharedDb.contactEntityQueries.insertContact(contact)
+            }
+            
+            groups.forEach { group ->
+                sharedDb.groupEntityQueries.insertGroup(group)
+            }
+            
+            messages.forEach { msg ->
+                sharedDb.messageEntityQueries.insertMessage(msg)
+            }
         }
     }
 
