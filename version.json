@@ -1,5 +1,5 @@
 {
-  "version": "1.0.1",
+  "version": "1.0.2",
   "downloadUrl": "https://raw.githubusercontent.com/Attam2213/messenger-release/main/app-debug.apk",
-  "changelog": "Update to version 1.0.1: UI Fixes and improvements."
+  "changelog": "Update to version 1.0.2: Added download progress bar."
 }
