@@ -10,6 +10,8 @@ import android.os.Environment
 import androidx.core.content.FileProvider
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.delay
 import java.io.File
 import java.net.URL
 import org.json.JSONObject
@@ -25,7 +27,8 @@ actual class AppUpdater actual constructor(context: Any?) {
                 val repoName = "messenger-release"
                 val branch = "main"
                 
-                val url = URL("https://raw.githubusercontent.com/$repoOwner/$repoName/$branch/version.json")
+                // Add timestamp to bypass cache
+                val url = URL("https://raw.githubusercontent.com/$repoOwner/$repoName/$branch/version.json?t=${System.currentTimeMillis()}")
                 val json = url.readText()
                 val obj = JSONObject(json)
                 
@@ -48,7 +51,7 @@ actual class AppUpdater actual constructor(context: Any?) {
         }
     }
 
-    actual fun downloadAndInstall(url: String, fileName: String) {
+    actual fun downloadAndInstall(url: String, fileName: String, onProgress: ((Float) -> Unit)?) {
         val request = DownloadManager.Request(Uri.parse(url))
         request.setTitle("Downloading Update")
         request.setDescription("Downloading $fileName")
@@ -58,6 +61,34 @@ actual class AppUpdater actual constructor(context: Any?) {
 
         val manager = ctx.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
         val downloadId = manager.enqueue(request)
+
+        if (onProgress != null) {
+            // Poll progress
+            val scope = kotlinx.coroutines.CoroutineScope(Dispatchers.Main)
+            scope.launch {
+                var downloading = true
+                while (downloading) {
+                    val query = DownloadManager.Query().setFilterById(downloadId)
+                    val cursor = manager.query(query)
+                    if (cursor.moveToFirst()) {
+                        val bytesDownloaded = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR))
+                        val bytesTotal = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES))
+                        
+                        if (bytesTotal > 0) {
+                            val progress = bytesDownloaded.toFloat() / bytesTotal.toFloat()
+                            onProgress(progress)
+                        }
+
+                        val status = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS))
+                        if (status == DownloadManager.STATUS_SUCCESSFUL || status == DownloadManager.STATUS_FAILED) {
+                            downloading = false
+                        }
+                    }
+                    cursor.close()
+                    kotlinx.coroutines.delay(500)
+                }
+            }
+        }
 
         // Register receiver to listen for completion
         val onComplete = object : BroadcastReceiver() {

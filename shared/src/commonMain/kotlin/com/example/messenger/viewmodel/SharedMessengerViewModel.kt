@@ -54,6 +54,12 @@ class SharedMessengerViewModel(
     private val _isCheckingUpdate = MutableStateFlow(false)
     val isCheckingUpdate: StateFlow<Boolean> = _isCheckingUpdate.asStateFlow()
 
+    private val _downloadProgress = MutableStateFlow(0f)
+    val downloadProgress: StateFlow<Float> = _downloadProgress.asStateFlow()
+
+    private val _isDownloading = MutableStateFlow(false)
+    val isDownloading: StateFlow<Boolean> = _isDownloading.asStateFlow()
+
     // Typing Status
     private val _typingStatuses = MutableStateFlow<Map<String, Boolean>>(emptyMap())
     val typingStatuses: StateFlow<Map<String, Boolean>> = _typingStatuses.asStateFlow()
@@ -330,7 +336,10 @@ class SharedMessengerViewModel(
                 val info = updater.checkForUpdate(currentVersion)
                 _updateInfo.value = info
                 if (info == null) {
-                    val msg = if (language.value == "ru") "Обновлений нет" else "No updates available"
+                    val msg = if (language.value == "ru") 
+                        "Обновлений нет (v$currentVersion)" 
+                    else 
+                        "No updates available (v$currentVersion)"
                     notificationHandler?.showNotification("Update", msg)
                 }
             } catch (e: Exception) {
@@ -344,6 +353,13 @@ class SharedMessengerViewModel(
     }
 
     fun downloadUpdate(info: UpdateInfo) {
-        appUpdater?.downloadAndInstall(info.downloadUrl, "messenger_update.apk")
+        _isDownloading.value = true
+        _downloadProgress.value = 0f
+        appUpdater?.downloadAndInstall(info.downloadUrl, "messenger_update.apk") { progress ->
+            _downloadProgress.value = progress
+            if (progress >= 1f) {
+                _isDownloading.value = false
+            }
+        }
     }
 }

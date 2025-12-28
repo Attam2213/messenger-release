@@ -11,6 +11,6 @@ data class UpdateInfo(
 
 expect class AppUpdater(context: Any?) {
     suspend fun checkForUpdate(currentVersion: String): UpdateInfo?
-    fun downloadAndInstall(url: String, fileName: String)
+    fun downloadAndInstall(url: String, fileName: String, onProgress: ((Float) -> Unit)? = null)
     fun getCurrentVersion(): String
 }

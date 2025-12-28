@@ -31,6 +31,8 @@ fun SettingsScreen(
 
     val updateInfo by viewModel.updateInfo.collectAsState()
     val isCheckingUpdate by viewModel.isCheckingUpdate.collectAsState()
+    val isDownloading by viewModel.isDownloading.collectAsState()
+    val downloadProgress by viewModel.downloadProgress.collectAsState()
 
     val str: (String) -> String = { Strings.get(it, language) }
 
@@ -195,10 +197,27 @@ fun SettingsScreen(
             Spacer(modifier = Modifier.height(8.dp))
 
             if (updateInfo != null) {
-                 Text(str("update_available") + updateInfo!!.version)
+                 Text(str("update_available") + " v${updateInfo!!.version}", color = MaterialTheme.colors.primary)
+                 Text(updateInfo!!.changelog, style = MaterialTheme.typography.caption)
                  Spacer(modifier = Modifier.height(8.dp))
-                 Button(onClick = { viewModel.downloadUpdate(updateInfo!!) }) {
-                     Text(str("install"))
+                 
+                 if (isDownloading) {
+                     Column(modifier = Modifier.fillMaxWidth()) {
+                         LinearProgressIndicator(
+                             progress = downloadProgress,
+                             modifier = Modifier.fillMaxWidth()
+                         )
+                         Spacer(modifier = Modifier.height(4.dp))
+                         Text(
+                             text = "${(downloadProgress * 100).toInt()}%",
+                             style = MaterialTheme.typography.caption,
+                             modifier = Modifier.align(Alignment.End)
+                         )
+                     }
+                 } else {
+                     Button(onClick = { viewModel.downloadUpdate(updateInfo!!) }) {
+                         Text(str("install"))
+                     }
                  }
             } else {
                  Button(

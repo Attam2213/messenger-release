@@ -5,7 +5,7 @@ actual class AppUpdater actual constructor(context: Any?) {
         return null
     }
 
-    actual fun downloadAndInstall(url: String, fileName: String) {
+    actual fun downloadAndInstall(url: String, fileName: String, onProgress: ((Float) -> Unit)?) {
         // Not supported on iOS via direct download
     }
 

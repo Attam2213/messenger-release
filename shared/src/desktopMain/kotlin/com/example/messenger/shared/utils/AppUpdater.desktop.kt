@@ -9,7 +9,7 @@ actual class AppUpdater actual constructor(context: Any?) {
         return null
     }
 
-    actual fun downloadAndInstall(url: String, fileName: String) {
+    actual fun downloadAndInstall(url: String, fileName: String, onProgress: ((Float) -> Unit)?) {
         if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
             Desktop.getDesktop().browse(URI(url))
         }
