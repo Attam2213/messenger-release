@@ -51,5 +51,11 @@ SELECT * FROM MessageEntity WHERE toPublicKey = :myKey AND fromPublicKey = :othe
 getUnreadCount:
 SELECT count(*) FROM MessageEntity WHERE toPublicKey = :myKey AND fromPublicKey = :otherKey AND isRead = 0;
 
+getUnreadCounts:
+SELECT fromPublicKey, count(*) 
+FROM MessageEntity 
+WHERE toPublicKey = :myKey AND isRead = 0 
+GROUP BY fromPublicKey;
+
 checkMessageExists:
 SELECT count(*) FROM MessageEntity WHERE timestamp = :timestamp AND encryptedContent = :content;

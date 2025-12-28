@@ -199,7 +199,9 @@ class ProcessMessageUseCase(
                 sendAck(messageId, netMsg.from_key)
             }
 
-            return@withContext ProcessResult.MessageSaved
+            val result = ProcessResult.MessageSaved(netMsg.from_key, extractedGroupId)
+            _processResult.emit(result)
+            return@withContext result
         }
     }
 

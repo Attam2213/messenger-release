@@ -29,6 +29,8 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 
+import com.example.messenger.domain.model.ContactUiModel
+
 class SharedMessengerViewModel(
     private val repository: MessengerRepository,
     private val cryptoManager: CryptoManager,
@@ -47,6 +49,13 @@ class SharedMessengerViewModel(
 
     // Contacts & Groups
     val contacts: Flow<List<ContactEntity>> = repository.getAllContacts()
+
+    val contactsUi: Flow<List<ContactUiModel>> = contacts
+        .combine(repository.getUnreadCountsMap(myPublicKey)) { contactList, unreadMap ->
+            contactList.map { contact ->
+                ContactUiModel(contact, unreadMap[contact.publicKey] ?: 0L)
+            }
+        }
     val groups: Flow<List<GroupEntity>> = repository.getAllGroups()
 
     // Polling/Sync Status
@@ -122,6 +131,20 @@ class SharedMessengerViewModel(
                     is ProcessResult.CallSignal -> {
                         callHandler?.handleIncomingCall(result.fromKey, result.type, result.content)
                     }
+                    is ProcessResult.MessageSaved -> {
+                        if (settingsManager.notificationsEnabled.value) {
+                            val contact = repository.getContact(result.fromKey)
+                            val name = contact?.name ?: "Unknown"
+                            val title = if (result.groupId != null) {
+                                val group = repository.getGroupById(result.groupId)
+                                val groupName = group?.name ?: "Group"
+                                "$groupName ($name)"
+                            } else {
+                                name
+                            }
+                            notificationHandler?.showNotification(title, "New Message")
+                        }
+                    }
                     else -> {}
                 }
             }
@@ -130,11 +153,6 @@ class SharedMessengerViewModel(
     private fun observeSyncStatus() {
         scope.launch {
             messageSynchronizationUseCase.status.collect { status ->
-                if (status is SyncStatus.Downloaded && status.count > 0) {
-                     if (settingsManager.notificationsEnabled.value) {
-                         notificationHandler?.showNotification("Messenger", "You have ${status.count} new messages")
-                     }
-                }
                 _pollingStatus.value = when (status) {
                     is SyncStatus.Initializing -> "Initializing..."
                     is SyncStatus.Connecting -> "Connecting..."
@@ -162,6 +180,27 @@ class SharedMessengerViewModel(
             } catch (e: Exception) {
                 onResult(false, e.message)
             }
+        }
+    }
+
+    fun updateContactName(publicKey: String, name: String, onResult: (Boolean) -> Unit) {
+        scope.launch {
+            try {
+                repository.updateContactName(publicKey, name)
+                onResult(true)
+            } catch (e: Exception) {
+                onResult(false)
+            }
+        }
+    }
+    
+    suspend fun getContact(publicKey: String): ContactEntity? {
+        return repository.getContact(publicKey)
+    }
+
+    fun markAsRead(contactKey: String) {
+        scope.launch {
+            repository.markMessagesAsRead(myPublicKey, contactKey)
         }
     }
 

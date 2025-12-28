@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.messenger.viewmodel.SharedMessengerViewModel
 import com.example.messenger.shared.db.ContactEntity
+import com.example.messenger.domain.model.ContactUiModel
 import kotlinx.coroutines.launch
 
 @Composable
@@ -21,7 +22,7 @@ fun ContactListScreen(
     onContactClick: (String, Boolean) -> Unit,
     onNavigate: (Screen) -> Unit
 ) {
-    val contacts by viewModel.contacts.collectAsState(initial = emptyList())
+    val contactsUi by viewModel.contactsUi.collectAsState(initial = emptyList())
     val groups by viewModel.groups.collectAsState(initial = emptyList())
     val pollingStatus by viewModel.pollingStatus.collectAsState()
     val language by viewModel.language.collectAsState()
@@ -102,11 +103,12 @@ fun ContactListScreen(
                     modifier = Modifier.padding(8.dp)
                 )
             }
-            items(contacts) { contact ->
+            items(contactsUi) { uiModel ->
                 ContactItem(
-                    name = contact.name,
-                    key = contact.publicKey,
+                    name = uiModel.contact.name,
+                    key = uiModel.contact.publicKey,
                     isGroup = false,
+                    unreadCount = uiModel.unreadCount,
                     onClick = onContactClick
                 )
             }
@@ -114,7 +116,7 @@ fun ContactListScreen(
         
         if (showDialog) {
             AddContactGroupDialog(
-                contacts = contacts,
+                contacts = contactsUi.map { it.contact },
                 language = language,
                 onDismiss = { showDialog = false },
                 onAddContact = { name, key ->
@@ -137,6 +139,7 @@ fun ContactItem(
     name: String,
     key: String,
     isGroup: Boolean,
+    unreadCount: Long = 0,
     onClick: (String, Boolean) -> Unit
 ) {
     Card(
@@ -156,13 +159,26 @@ fun ContactItem(
                 modifier = Modifier.size(40.dp)
             )
             Spacer(modifier = Modifier.width(16.dp))
-            Column {
+            Column(modifier = Modifier.weight(1f)) {
                 Text(text = name, style = MaterialTheme.typography.h6)
                 Text(
                     text = key.take(8) + "...", 
                     style = MaterialTheme.typography.body2,
                     color = MaterialTheme.colors.onSurface.copy(alpha = 0.6f)
                 )
+            }
+            if (unreadCount > 0) {
+                Surface(
+                    color = MaterialTheme.colors.secondary,
+                    shape = androidx.compose.foundation.shape.CircleShape,
+                ) {
+                    Text(
+                        text = unreadCount.toString(),
+                        color = androidx.compose.ui.graphics.Color.White,
+                        modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
+                        style = MaterialTheme.typography.caption
+                    )
+                }
             }
         }
     }

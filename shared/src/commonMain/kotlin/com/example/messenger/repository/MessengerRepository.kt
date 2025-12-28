@@ -80,6 +80,12 @@ class MessengerRepository(
 
     suspend fun deleteContact(publicKey: String) = sharedDb.contactEntityQueries.deleteContactByKey(publicKey)
 
+    suspend fun getContact(publicKey: String): ContactEntity? = 
+        sharedDb.contactEntityQueries.getContactByKey(publicKey).executeAsOneOrNull()
+
+    suspend fun updateContactName(publicKey: String, name: String) = 
+        sharedDb.contactEntityQueries.updateName(name, publicKey)
+
     // Groups
     fun getAllGroups(): Flow<List<GroupEntity>> = 
         sharedDb.groupEntityQueries.getAllGroups()
@@ -128,6 +134,12 @@ class MessengerRepository(
         sharedDb.messageEntityQueries.getUnreadCount(myKey, otherKey)
             .asFlow()
             .mapToOne(Dispatchers.IO)
+
+    fun getUnreadCountsMap(myKey: String): Flow<Map<String, Long>> = 
+        sharedDb.messageEntityQueries.getUnreadCounts(myKey) { key, count -> key to count }
+            .asFlow()
+            .mapToList(Dispatchers.IO)
+            .map { list -> list.toMap() }
 
     suspend fun deleteMessagesBetween(myKey: String, otherKey: String) = 
         sharedDb.messageEntityQueries.deleteMessagesBetween(myKey, otherKey)

@@ -11,6 +11,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Call
 import androidx.compose.material.icons.filled.VideoCall
 import androidx.compose.material.icons.filled.Send
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -41,6 +42,17 @@ fun ChatScreen(
     val scope = rememberCoroutineScope()
     val scaffoldState = rememberScaffoldState()
     
+    var contactName by remember { mutableStateOf("") }
+    var showEditNameDialog by remember { mutableStateOf(false) }
+
+    LaunchedEffect(contactKey) {
+        if (!isGroup) {
+            viewModel.markAsRead(contactKey)
+            val contact = viewModel.getContact(contactKey)
+            contactName = contact?.name ?: ""
+        }
+    }
+
     // Auto-scroll to bottom
     LaunchedEffect(messages.size) {
         if (messages.isNotEmpty()) {
@@ -52,9 +64,14 @@ fun ChatScreen(
         scaffoldState = scaffoldState,
         topBar = {
             TopAppBar(
-                title = { Text(if (isGroup) "Group Chat" else "Chat") },
+                title = { Text(if (isGroup) "Group Chat" else contactName.ifEmpty { "Chat" }) },
                 actions = {
                     if (!isGroup) {
+                        if (contactName.startsWith("Unknown")) {
+                            IconButton(onClick = { showEditNameDialog = true }) {
+                                Icon(Icons.Default.Add, contentDescription = "Add Contact")
+                            }
+                        }
                         IconButton(onClick = { viewModel.initiateCall(contactKey, false) }) {
                             Icon(Icons.Default.Call, contentDescription = "Audio Call")
                         }
@@ -143,6 +160,51 @@ fun ChatScreen(
             }
         }
     }
+    if (showEditNameDialog) {
+        EditContactNameDialog(
+            currentName = "",
+            onDismiss = { showEditNameDialog = false },
+            onSave = { newName ->
+                viewModel.updateContactName(contactKey, newName) { success ->
+                    if (success) {
+                        contactName = newName
+                        showEditNameDialog = false
+                    }
+                }
+            }
+        )
+    }
+}
+
+@Composable
+fun EditContactNameDialog(
+    currentName: String,
+    onDismiss: () -> Unit,
+    onSave: (String) -> Unit
+) {
+    var name by remember { mutableStateOf(currentName) }
+    
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Save Contact") },
+        text = {
+            TextField(
+                value = name,
+                onValueChange = { name = it },
+                label = { Text("Name") }
+            )
+        },
+        confirmButton = {
+            Button(onClick = { onSave(name) }) {
+                Text("Save")
+            }
+        },
+        dismissButton = {
+            Button(onClick = onDismiss) {
+                Text("Cancel")
+            }
+        }
+    )
 }
 
 @Composable
