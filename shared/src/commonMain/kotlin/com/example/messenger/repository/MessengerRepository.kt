@@ -125,7 +125,7 @@ class MessengerRepository(
         sharedDb.messageEntityQueries.markAsRead(messageId)
 
     suspend fun markMessagesAsRead(myKey: String, otherKey: String) = 
-        sharedDb.messageEntityQueries.markMessagesAsRead(myKey, otherKey)
+        sharedDb.messageEntityQueries.markMessagesAsRead(otherKey, myKey)
 
     suspend fun getUnreadMessages(myKey: String, otherKey: String) = 
         sharedDb.messageEntityQueries.getUnreadMessages(myKey, otherKey).executeAsList()

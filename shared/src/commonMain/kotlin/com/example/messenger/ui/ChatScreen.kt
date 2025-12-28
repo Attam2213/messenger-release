@@ -47,9 +47,14 @@ fun ChatScreen(
 
     LaunchedEffect(contactKey) {
         if (!isGroup) {
-            viewModel.markAsRead(contactKey)
             val contact = viewModel.getContact(contactKey)
             contactName = contact?.name ?: ""
+        }
+    }
+
+    LaunchedEffect(contactKey, messages) {
+        if (!isGroup) {
+            viewModel.markAsRead(contactKey)
         }
     }
 
