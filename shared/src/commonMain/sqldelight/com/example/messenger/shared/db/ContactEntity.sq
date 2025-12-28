@@ -1,0 +1,22 @@
+import kotlin.Boolean;
+
+CREATE TABLE ContactEntity (
+    publicKey TEXT NOT NULL PRIMARY KEY,
+    name TEXT NOT NULL,
+    createdAt INTEGER NOT NULL
+);
+
+getAllContacts:
+SELECT * FROM ContactEntity ORDER BY name ASC;
+
+getContactByKey:
+SELECT * FROM ContactEntity WHERE publicKey = ? LIMIT 1;
+
+insertContact:
+INSERT OR REPLACE INTO ContactEntity(publicKey, name, createdAt) VALUES ?;
+
+deleteContactByKey:
+DELETE FROM ContactEntity WHERE publicKey = ?;
+
+deleteAll:
+DELETE FROM ContactEntity;

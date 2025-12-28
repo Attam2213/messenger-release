@@ -1,0 +1,56 @@
+name: Android Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    name: Build and Release APK
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: gradle
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Build Debug APK
+        run: ./gradlew app:assembleDebug
+
+      # Optional: Sign APK (if secrets are provided)
+      # For now we use the debug build which is self-signed with a debug key.
+      
+      - name: Generate version.json
+        run: |
+          VERSION_TAG=${GITHUB_REF#refs/tags/}
+          # Assuming the repo is public or user has access. 
+          # We construct the download URL dynamically based on the repository.
+          DOWNLOAD_URL="https://github.com/${{ github.repository }}/releases/download/$VERSION_TAG/app-debug.apk"
+          
+          echo "{" > version.json
+          echo "  \"version\": \"$VERSION_TAG\"," >> version.json
+          echo "  \"url\": \"$DOWNLOAD_URL\"," >> version.json
+          echo "  \"changelog\": \"Release $VERSION_TAG\"" >> version.json
+          echo "}" >> version.json
+          
+          cat version.json
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            app/build/outputs/apk/debug/app-debug.apk
+            version.json
+          generate_release_notes: true

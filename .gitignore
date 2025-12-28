@@ -1,0 +1,25 @@
+*.iml
+.gradle/
+/local.properties
+/.idea/
+.DS_Store
+/build/
+/captures/
+.externalNativeBuild
+.cxx
+local.properties
+
+# Android
+app/build/
+app/release/
+
+# Kotlin MP
+build/
+*/build/
+
+# Desktop
+desktopApp/build/
+desktopApp/release/
+
+# Logs
+*.log

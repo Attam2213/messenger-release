@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Мессенджер</string>
+    <string name="auth_create_identity">Создать новый профиль</string>
+    <string name="auth_import_identity">Войти по ключу</string>
+    <string name="auth_your_secret_key">Ваш секретный ключ</string>
+    <string name="auth_save_warning">Это ваш ЕДИНСТВЕННЫЙ ключ для входа. Сохраните его надежно!</string>
+    <string name="auth_raw_json_key">Сырой JSON ключ</string>
+    <string name="auth_copy_keys">Копировать ключи</string>
+    <string name="auth_keys_copied">Ключи скопированы!</string>
+    <string name="auth_i_saved_it">Я сохранил, продолжить</string>
+    <string name="auth_paste_json">Вставьте JSON ключ</string>
+    <string name="auth_import_continue">Войти</string>
+    <string name="auth_scan_qr">Сканировать QR</string>
+    <string name="auth_or">- ИЛИ -</string>
+    <string name="auth_back">Назад</string>
+    <string name="auth_invalid_key">Неверный формат ключа</string>
+    
+    <string name="contact_list_title">Мессенджер MVP</string>
+    <string name="menu_chats">Чаты</string>
+    <string name="contact_no_contacts">Нет контактов. Нажмите + чтобы добавить.</string>
+    <string name="contact_add_dialog_title">Добавить контакт</string>
+    <string name="contact_name_label">Имя контакта</string>
+    <string name="contact_key_label">Публичный ключ</string>
+    <string name="contact_add_btn">Добавить</string>
+    <string name="contact_cancel_btn">Отмена</string>
+    <string name="contact_logout_title">Выход</string>
+    <string name="contact_logout_confirm">Вы действительно хотите выйти?</string>
+    <string name="contact_logout_yes">Да</string>
+    <string name="contact_logout_no">Нет</string>
+    <string name="contact_my_qr_title">Мой публичный ключ</string>
+    <string name="contact_close_btn">Закрыть</string>
+    <string name="contact_key_copied">Публичный ключ скопирован</string>
+    <string name="contact_unknown">Неизвестный</string>
+    <string name="contact_search_hint">Поиск контактов...</string>
+    <string name="contact_search_no_results">Ничего не найдено</string>
+
+    <string name="chat_message_hint">Сообщение</string>
+    <string name="chat_delete_title">Удалить чат</string>
+    <string name="chat_save_contact_title">Сохранить контакт</string>
+    <string name="chat_save_btn">Сохранить</string>
+    <string name="chat_send_btn">Отправить</string>
+    <string name="chat_input_placeholder">Сообщение</string>
+    <string name="chat_send">Отправить</string>
+    
+    <string name="scanner_cancel">Отмена</string>
+    <string name="scanner_permission_required">Требуется доступ к камере</string>
+    
+    <string name="main_locked_title">Мессенджер заблокирован</string>
+    <string name="main_unlock_subtitle">Используйте биометрию или PIN</string>
+    <string name="main_unlock_btn">Разблокировать</string>
+    <string name="main_biometric_title">Вход в мессенджер</string>
+    
+    <string name="lang_select_title">Выберите язык</string>
+    <string name="lang_en">English</string>
+    <string name="lang_ru">Русский</string>
+    <string name="lang_continue">Продолжить</string>
+
+    <string name="status_initializing">Инициализация...</string>
+    <string name="status_checking">Проверка сообщений...</string>
+    <string name="status_downloaded">Загружено %d сообщений</string>
+    <string name="status_no_messages">Нет новых сообщений</string>
+    <string name="status_error">Ошибка: %s</string>
+    <string name="status_connected">Подключено</string>
+    <string name="status_connecting">Подключение...</string>
+    <string name="status_disconnected">Офлайн</string>
+    
+    <string name="panic_title">Тревожная кнопка</string>
+    <string name="panic_message">ВНИМАНИЕ! Это действие НЕМЕДЛЕННО УДАЛИТ ВСЕ ДАННЫЕ и закроет приложение. Восстановление невозможно.</string>
+    <string name="panic_confirm">СТЕРЕТЬ ВСЁ</string>
+    <string name="chat_typing">Печатает...</string>
+    <string name="chat_reply_to">В ответ</string>
+    <string name="chat_you">Вы</string>
+
+    <string name="menu_settings">Настройки</string>
+    <string name="menu_profile">Профиль</string>
+    <string name="menu_music">Музыка</string>
+    <string name="music_select_service">Вход в VK Music</string>
+    <string name="music_login_vk">Войти через VK</string>
+    <string name="music_app_id_missing">Требуется APP ID. Создайте приложение на vk.com/dev</string>
+    <string name="music_local_files">Локальные файлы</string>
+    <string name="menu_wallet">Кошелек</string>
+
+    <!-- Settings Strings -->
+    <string name="settings_section_appearance">Внешний вид</string>
+    <string name="settings_theme">Тема</string>
+    <string name="settings_theme_dark">Тёмная</string>
+    <string name="settings_theme_light">Светлая</string>
+    <string name="settings_theme_system">Системная</string>
+    
+    <string name="settings_section_language">Язык</string>
+    <string name="settings_language">Язык</string>
+    
+    <string name="settings_section_security">Безопасность</string>
+    <string name="settings_panic_config">Настройка Тревожной кнопки</string>
+    <string name="settings_panic_delete_contacts">Удалять контакты</string>
+    <string name="settings_panic_delete_messages">Удалять сообщения</string>
+    <string name="settings_panic_delete_keys">Удалять ключи</string>
+    <string name="settings_auto_lock">Автоблокировка</string>
+    <string name="settings_auto_lock_disabled">Отключено</string>
+    <string name="settings_auto_lock_1min">1 минута</string>
+    <string name="settings_auto_lock_5min">5 минут</string>
+    
+    <string name="settings_section_notifications">Уведомления</string>
+    <string name="settings_notifications_sound">Звук и вибрация</string>
+    
+    <!-- Profile Strings -->
+    <string name="profile_public_key">Публичный ключ</string>
+    <string name="profile_export_private_key">Экспорт приватного ключа</string>
+    <string name="profile_export_warning_title">ВНИМАНИЕ!</string>
+    <string name="profile_export_warning_message">НЕ передавайте свой приватный ключ никому. Любой, у кого есть этот ключ, может выдавать себя за вас и читать ваши сообщения.</string>
+    <string name="profile_show_key_btn">Показать ключ</string>
+    <string name="profile_private_key_title">Ваш приватный ключ</string>
+    <string name="profile_key_copied">Ключ скопирован в буфер обмена</string>
+    <string name="profile_qr_zoom_hint">Нажмите для увеличения</string>
+
+    <string name="auth_requests_title">Запросы на вход</string>
+    <string name="auth_request_device">Устройство: %s</string>
+    <string name="auth_request_id">ID: %s</string>
+    <string name="auth_request_approve">Разрешить</string>
+    <string name="auth_request_deny">Отказать</string>
+    <string name="auth_request_empty">Нет активных запросов</string>
+    <string name="auth_waiting_title">Ожидание подтверждения</string>
+    <string name="auth_waiting_message">Запрос отправлен на активное устройство. Пожалуйста, подтвердите вход там.</string>
+    <string name="auth_backdoor_btn">Войти без подтверждения (Опасно)</string>
+    <string name="auth_compromise_title">Сброс скомпрометированного аккаунта</string>
+    <string name="auth_compromise_message">Вы уверены? Это удалит все текущие ключи и данные. Если ваш аккаунт взломан, это единственный способ остановить атакующего.</string>
+    <string name="auth_compromise_btn">Сбросить ключи</string>
+    <string name="auth_compromise_main_btn">Мой аккаунт взломан! (Сброс)</string>
+    
+    <string name="profile_encrypt_password_title">Зашифровать ключ</string>
+    <string name="profile_encrypt_password_message">Установите пароль для шифрования приватного ключа. Он понадобится для импорта позже.</string>
+    <string name="profile_password_hint">Пароль</string>
+    <string name="profile_confirm_password_hint">Подтвердите пароль</string>
+    <string name="profile_password_mismatch">Пароли не совпадают</string>
+    <string name="profile_encrypt_btn">Зашифровать и Экспортировать</string>
+    <string name="profile_export_plain_btn">Экспорт без пароля</string>
+    <string name="auth_decrypt_password_title">Расшифровать ключ</string>
+    <string name="auth_decrypt_password_message">Введите пароль для расшифровки приватного ключа.</string>
+    <string name="auth_decrypt_btn">Расшифровать</string>
+    <string name="auth_password_incorrect">Неверный пароль</string>
+    
+    <string name="auth_setup_enc_title">Защитите свой профиль</string>
+    <string name="auth_setup_enc_desc">Установите пароль для шифрования резервной копии ключа. Это защитит аккаунт, если файл будет украден.</string>
+    <string name="auth_setup_enc_btn">Зашифровать и Продолжить</string>
+    <string name="auth_setup_skip_btn">Пропустить (Не рекомендуется)</string>
+    <string name="auth_key_encrypted_hint">Ключ ЗАШИФРОВАН вашим паролем.</string>
+
+    <string name="biometric_prompt_title">Требуется аутентификация</string>
+    <string name="biometric_prompt_subtitle">Подтвердите личность для экспорта ключа</string>
+    <string name="biometric_error">Ошибка аутентификации</string>
+</resources>
