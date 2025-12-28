@@ -1,5 +1,5 @@
 {
-  "version": "1.0.5",
+  "version": "1.0.6",
   "downloadUrl": "https://raw.githubusercontent.com/Attam2213/messenger-release/main/app-debug.apk",
-  "changelog": "Update to version 1.0.5: Notifications, unread counts, and contact saving."
+  "changelog": "Update to version 1.0.6: Fixed unread message count issue."
 }
