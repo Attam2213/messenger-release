@@ -21,7 +21,7 @@ actual class AppUpdater actual constructor(context: Any?) {
         return withContext(Dispatchers.IO) {
             try {
                 // TODO: Replace with your repository: owner/repo
-                val repoOwner = "YOUR_GITHUB_USERNAME"
+                val repoOwner = "Attam2213"
                 val repoName = "messenger"
                 
                 val url = URL("https://api.github.com/repos/$repoOwner/$repoName/releases/latest")
