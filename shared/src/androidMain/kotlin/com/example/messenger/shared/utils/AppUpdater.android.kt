@@ -20,40 +20,25 @@ actual class AppUpdater actual constructor(context: Any?) {
     actual suspend fun checkForUpdate(currentVersion: String): UpdateInfo? {
         return withContext(Dispatchers.IO) {
             try {
-                // TODO: Replace with your repository: owner/repo
+                // Check version.json from the release repository
                 val repoOwner = "Attam2213"
-                val repoName = "messenger-release" // Public repository for updates
+                val repoName = "messenger-release"
+                val branch = "main"
                 
-                val url = URL("https://api.github.com/repos/$repoOwner/$repoName/releases/latest")
+                val url = URL("https://raw.githubusercontent.com/$repoOwner/$repoName/$branch/version.json")
                 val json = url.readText()
                 val obj = JSONObject(json)
                 
-                // GitHub tags usually start with 'v', e.g., 'v1.0'
-                val latestVersionTag = obj.getString("tag_name") 
-                val latestVersion = latestVersionTag.removePrefix("v")
+                val latestVersion = obj.getString("version")
+                val downloadUrl = obj.getString("downloadUrl")
+                val changelog = obj.optString("changelog", "No changelog available")
                 
-                // Simple version comparison (not perfect, but works for simple cases)
-                if (latestVersion != currentVersion && latestVersionTag != currentVersion) {
-                    val assets = obj.getJSONArray("assets")
-                    var downloadUrl = ""
-                    
-                    // Find the APK asset
-                    for (i in 0 until assets.length()) {
-                        val asset = assets.getJSONObject(i)
-                        val name = asset.getString("name")
-                        if (name.endsWith(".apk")) {
-                            downloadUrl = asset.getString("browser_download_url")
-                            break
-                        }
-                    }
-                    
-                    if (downloadUrl.isNotEmpty()) {
-                        return@withContext UpdateInfo(
-                            version = latestVersionTag,
-                            downloadUrl = downloadUrl,
-                            changelog = obj.optString("body", "No changelog")
-                        )
-                    }
+                if (latestVersion != currentVersion) {
+                    return@withContext UpdateInfo(
+                        version = latestVersion,
+                        downloadUrl = downloadUrl,
+                        changelog = changelog
+                    )
                 }
                 null
             } catch (e: Exception) {
