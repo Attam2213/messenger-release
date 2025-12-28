@@ -22,7 +22,7 @@ actual class AppUpdater actual constructor(context: Any?) {
             try {
                 // TODO: Replace with your repository: owner/repo
                 val repoOwner = "Attam2213"
-                val repoName = "messenger"
+                val repoName = "messenger-releases" // Public repository for updates
                 
                 val url = URL("https://api.github.com/repos/$repoOwner/$repoName/releases/latest")
                 val json = url.readText()

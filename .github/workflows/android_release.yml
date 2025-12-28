@@ -10,7 +10,7 @@ jobs:
     name: Build and Release APK
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      contents: read
 
     steps:
       - name: Checkout code
@@ -29,15 +29,11 @@ jobs:
       - name: Build Debug APK
         run: ./gradlew app:assembleDebug
 
-      # Optional: Sign APK (if secrets are provided)
-      # For now we use the debug build which is self-signed with a debug key.
-      
       - name: Generate version.json
         run: |
           VERSION_TAG=${GITHUB_REF#refs/tags/}
-          # Assuming the repo is public or user has access. 
-          # We construct the download URL dynamically based on the repository.
-          DOWNLOAD_URL="https://github.com/${{ github.repository }}/releases/download/$VERSION_TAG/app-debug.apk"
+          # URL now points to the PUBLIC releases repo
+          DOWNLOAD_URL="https://github.com/Attam2213/messenger-releases/releases/download/$VERSION_TAG/app-debug.apk"
           
           echo "{" > version.json
           echo "  \"version\": \"$VERSION_TAG\"," >> version.json
@@ -47,10 +43,13 @@ jobs:
           
           cat version.json
 
-      - name: Create Release
-        uses: softprops/action-gh-release@v1
+      - name: Create Release in Public Repo
+        uses: ncipollo/release-action@v1
         with:
-          files: |
-            app/build/outputs/apk/debug/app-debug.apk
-            version.json
-          generate_release_notes: true
+          token: ${{ secrets.PUBLIC_REPO_TOKEN }}
+          owner: Attam2213
+          repo: messenger-releases
+          tag: ${{ github.ref_name }}
+          artifacts: "app/build/outputs/apk/debug/app-debug.apk,version.json"
+          body: "Release ${{ github.ref_name }}"
+          generateReleaseNotes: true
