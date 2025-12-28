@@ -329,10 +329,13 @@ class SharedMessengerViewModel(
                 val info = appUpdater.checkForUpdate("1.0.0")
                 _updateInfo.value = info
                 if (info == null) {
-                    notificationHandler?.showNotification("Update", "No updates available")
+                    val msg = if (language.value == "ru") "Обновлений нет" else "No updates available"
+                    notificationHandler?.showNotification("Update", msg)
                 }
             } catch (e: Exception) {
-                notificationHandler?.showNotification("Update Error", e.message ?: "Unknown error")
+                val title = if (language.value == "ru") "Ошибка обновления" else "Update Error"
+                val msg = e.message ?: "Unknown error"
+                notificationHandler?.showNotification(title, msg)
             } finally {
                 _isCheckingUpdate.value = false
             }
