@@ -320,13 +320,14 @@ class SharedMessengerViewModel(
 
     // Updates
     fun checkForUpdates() {
-        if (appUpdater == null) return
+        val updater = appUpdater ?: return
         
         scope.launch {
             _isCheckingUpdate.value = true
             try {
                 // Assuming current version is 1.0.0, replace with real version fetching
-                val info = appUpdater.checkForUpdate("1.0.0")
+                val currentVersion = updater.getCurrentVersion()
+                val info = updater.checkForUpdate(currentVersion)
                 _updateInfo.value = info
                 if (info == null) {
                     val msg = if (language.value == "ru") "Обновлений нет" else "No updates available"

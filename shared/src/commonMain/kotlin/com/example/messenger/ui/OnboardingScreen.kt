@@ -39,12 +39,6 @@ fun OnboardingScreen(
         OnboardingStep.Language -> {
             LanguageSelectionStep(
                 viewModel = viewModel,
-                onNext = { step = OnboardingStep.Profile }
-            )
-        }
-        OnboardingStep.Profile -> {
-            ProfileSetupStep(
-                viewModel = viewModel,
                 onNext = { step = OnboardingStep.Identity }
             )
         }
@@ -60,56 +54,6 @@ fun OnboardingScreen(
     }
 }
 
-@Composable
-fun ProfileSetupStep(
-    viewModel: SharedMessengerViewModel,
-    onNext: () -> Unit
-) {
-    var name by remember { mutableStateOf("") }
-    val language by viewModel.language.collectAsState()
-    val isRussian = language == "ru"
-    
-    Column(
-        modifier = Modifier.fillMaxSize().padding(16.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(
-            if (isRussian) "Ваш профиль" else "Your Profile",
-            style = MaterialTheme.typography.h5
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        
-        Text(
-            if (isRussian) "Введите ваше имя (видно другим пользователям)" 
-            else "Enter your name (visible to other users)",
-            style = MaterialTheme.typography.body1
-        )
-        
-        Spacer(modifier = Modifier.height(24.dp))
-        
-        OutlinedTextField(
-            value = name,
-            onValueChange = { name = it },
-            label = { Text(if (isRussian) "Имя" else "Name") },
-            singleLine = true,
-            modifier = Modifier.fillMaxWidth(0.7f)
-        )
-        
-        Spacer(modifier = Modifier.height(32.dp))
-        
-        Button(
-            onClick = {
-                viewModel.setUserName(name)
-                onNext()
-            },
-            enabled = name.isNotBlank(),
-            modifier = Modifier.fillMaxWidth(0.5f)
-        ) {
-            Text(if (isRussian) "Далее" else "Next")
-        }
-    }
-}
 
 @Composable
 fun WelcomeStep(
@@ -429,6 +373,5 @@ fun IdentitySetupStep(
 enum class OnboardingStep {
     Welcome,
     Language,
-    Profile,
     Identity
 }

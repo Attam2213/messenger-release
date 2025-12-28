@@ -6,7 +6,9 @@ import com.example.messenger.shared.infrastructure.NotificationHandler
 
 class AndroidNotificationHandler(private val context: Context) : NotificationHandler {
     override fun showNotification(title: String, message: String) {
-        // In foreground, show a Toast
-        Toast.makeText(context, "$title: $message", Toast.LENGTH_SHORT).show()
+        // Ensure UI operations are on the main thread
+        android.os.Handler(android.os.Looper.getMainLooper()).post {
+            Toast.makeText(context, "$title: $message", Toast.LENGTH_SHORT).show()
+        }
     }
 }

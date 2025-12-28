@@ -7,6 +7,8 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
 import com.example.messenger.viewmodel.SharedMessengerViewModel
 
 @Composable
@@ -23,65 +25,70 @@ fun App(viewModel: SharedMessengerViewModel) {
     }
 
     MessengerTheme {
-        when (val screen = currentScreen) {
-            is Screen.Onboarding -> {
-                OnboardingScreen(
-                    viewModel = viewModel,
-                    onOnboardingComplete = {
-                        currentScreen = Screen.ContactList
-                    }
-                )
-            }
-            is Screen.ContactList -> {
-                ContactListScreen(
-                    viewModel = viewModel,
-                    onContactClick = { contactKey, isGroup ->
-                        currentScreen = Screen.Chat(contactKey, isGroup)
-                    },
-                    onNavigate = { currentScreen = it }
-                )
-            }
-            is Screen.Chat -> {
-                ChatScreen(
-                    viewModel = viewModel,
-                    contactKey = screen.contactKey,
-                    isGroup = screen.isGroup,
-                    onBack = { currentScreen = Screen.ContactList }
-                )
-            }
-            is Screen.AuthRequests -> {
-                AuthRequestsScreen(
-                    viewModel = viewModel,
-                    onBack = { currentScreen = Screen.ContactList }
-                )
-            }
-            is Screen.Settings -> {
-                SettingsScreen(
-                    viewModel = viewModel,
-                    onBack = { currentScreen = Screen.ContactList }
-                )
-            }
-            is Screen.Profile -> {
-                ProfileScreen(
-                    viewModel = viewModel,
-                    onBack = { currentScreen = Screen.ContactList }
-                )
-            }
-            // Add other screens as needed
-            is Screen.Loading -> {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    CircularProgressIndicator()
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colors.background
+        ) {
+            when (val screen = currentScreen) {
+                is Screen.Onboarding -> {
+                    OnboardingScreen(
+                        viewModel = viewModel,
+                        onOnboardingComplete = {
+                            currentScreen = Screen.ContactList
+                        }
+                    )
                 }
-            }
-            else -> {
-                // Fallback or other screens
-                ContactListScreen(
-                    viewModel = viewModel,
-                    onContactClick = { contactKey, isGroup ->
-                        currentScreen = Screen.Chat(contactKey, isGroup)
-                    },
-                    onNavigate = { currentScreen = it }
-                )
+                is Screen.ContactList -> {
+                    ContactListScreen(
+                        viewModel = viewModel,
+                        onContactClick = { contactKey, isGroup ->
+                            currentScreen = Screen.Chat(contactKey, isGroup)
+                        },
+                        onNavigate = { currentScreen = it }
+                    )
+                }
+                is Screen.Chat -> {
+                    ChatScreen(
+                        viewModel = viewModel,
+                        contactKey = screen.contactKey,
+                        isGroup = screen.isGroup,
+                        onBack = { currentScreen = Screen.ContactList }
+                    )
+                }
+                is Screen.AuthRequests -> {
+                    AuthRequestsScreen(
+                        viewModel = viewModel,
+                        onBack = { currentScreen = Screen.ContactList }
+                    )
+                }
+                is Screen.Settings -> {
+                    SettingsScreen(
+                        viewModel = viewModel,
+                        onBack = { currentScreen = Screen.ContactList }
+                    )
+                }
+                is Screen.Profile -> {
+                    ProfileScreen(
+                        viewModel = viewModel,
+                        onBack = { currentScreen = Screen.ContactList }
+                    )
+                }
+                // Add other screens as needed
+                is Screen.Loading -> {
+                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        CircularProgressIndicator()
+                    }
+                }
+                else -> {
+                    // Fallback or other screens
+                    ContactListScreen(
+                        viewModel = viewModel,
+                        onContactClick = { contactKey, isGroup ->
+                            currentScreen = Screen.Chat(contactKey, isGroup)
+                        },
+                        onNavigate = { currentScreen = it }
+                    )
+                }
             }
         }
     }

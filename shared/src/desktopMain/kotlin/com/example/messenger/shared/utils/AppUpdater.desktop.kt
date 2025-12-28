@@ -14,4 +14,8 @@ actual class AppUpdater actual constructor(context: Any?) {
             Desktop.getDesktop().browse(URI(url))
         }
     }
+
+    actual fun getCurrentVersion(): String {
+        return "1.0.0" // TODO: Implement real version retrieval for Desktop
+    }
 }

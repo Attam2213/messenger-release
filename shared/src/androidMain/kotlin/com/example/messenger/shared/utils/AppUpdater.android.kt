@@ -96,6 +96,15 @@ actual class AppUpdater actual constructor(context: Any?) {
         }
     }
 
+    actual fun getCurrentVersion(): String {
+        return try {
+            val pInfo = ctx.packageManager.getPackageInfo(ctx.packageName, 0)
+            pInfo.versionName ?: "1.0.0"
+        } catch (e: Exception) {
+            "1.0.0"
+        }
+    }
+
     private fun installApk(downloadId: Long) {
         val manager = ctx.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
         val uri = manager.getUriForDownloadedFile(downloadId)
