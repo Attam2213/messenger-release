@@ -4,11 +4,16 @@ import android.content.Context
 import android.media.MediaPlayer
 import androidx.core.net.toUri
 import java.io.File
+import com.example.messenger.shared.infrastructure.AudioPlayer
 
-class AudioPlayer(private val context: Context) {
+class AudioPlayer(private val context: Context) : AudioPlayer {
     private var player: MediaPlayer? = null
     var onProgressChanged: ((Float) -> Unit)? = null // 0.0 to 1.0
     var onCompletion: (() -> Unit)? = null
+
+    override fun play(filePath: String) {
+        playFile(File(filePath))
+    }
 
     fun playFile(file: File) {
         stop()
@@ -67,7 +72,7 @@ class AudioPlayer(private val context: Context) {
         }
     }
 
-    fun isPlaying(): Boolean {
+    override fun isPlaying(): Boolean {
         return player?.isPlaying == true
     }
     
@@ -77,7 +82,7 @@ class AudioPlayer(private val context: Context) {
         } ?: 0f
     }
 
-    fun stop() {
+    override fun stop() {
         try {
             player?.stop()
             player?.release()

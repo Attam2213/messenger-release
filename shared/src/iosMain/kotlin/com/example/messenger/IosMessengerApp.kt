@@ -16,6 +16,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 
 import com.example.messenger.shared.utils.AppUpdater
+import com.example.messenger.shared.utils.FileHandler
 
 object IosMessengerApp {
     private val applicationScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
@@ -69,7 +70,10 @@ object IosMessengerApp {
             messageDecryptionUseCase = messageDecryptionUseCase,
             callHandler = null, // TODO: Implement IosCallHandler
             notificationHandler = null, // TODO: Implement IosNotificationHandler
+            audioRecorder = null,
+            audioPlayer = null,
             appUpdater = AppUpdater(null),
+            fileHandler = FileHandler(null),
             scope = applicationScope
         )
     }

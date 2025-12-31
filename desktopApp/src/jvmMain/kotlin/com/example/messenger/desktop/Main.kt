@@ -88,6 +88,8 @@ fun main() {
                     messageDecryptionUseCase,
                     desktopCallHandler,
                     notificationHandler,
+                    null, // AudioRecorder
+                    null, // AudioPlayer
                     appUpdater,
                     fileHandler,
                     applicationScope

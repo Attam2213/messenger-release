@@ -298,6 +298,8 @@ fun MainContent() {
     val app = context.applicationContext as MessengerApplication
     val notificationHandler = remember { AndroidNotificationHandler(context) }
     val fileHandler = remember { FileHandler(context) }
+    val audioRecorder = remember { AudioRecorder(context) }
+    val audioPlayer = remember { AudioPlayer(context) }
     
     val sharedViewModel = remember {
         SharedMessengerViewModel(
@@ -311,6 +313,8 @@ fun MainContent() {
             messageDecryptionUseCase = app.messageDecryptionUseCase,
             callHandler = app.androidCallHandler, 
             notificationHandler = notificationHandler,
+            audioRecorder = audioRecorder,
+            audioPlayer = audioPlayer,
             appUpdater = app.appUpdater,
             fileHandler = fileHandler,
             scope = app.applicationScope
