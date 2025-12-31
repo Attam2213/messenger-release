@@ -23,6 +23,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.launch
+import com.example.messenger.shared.db.MessageEntity
+import androidx.compose.material.Text
 
 @Composable
 fun ChatScreen(

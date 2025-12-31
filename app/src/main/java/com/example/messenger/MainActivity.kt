@@ -38,6 +38,8 @@ import com.example.messenger.viewmodel.SharedMessengerViewModel
 import com.example.messenger.ui.App as SharedApp
 import com.example.messenger.infrastructure.AndroidNotificationHandler
 import com.example.messenger.shared.utils.FileHandler
+import com.example.messenger.utils.AudioRecorder as AndroidAudioRecorder
+import com.example.messenger.utils.AudioPlayer as AndroidAudioPlayer
 
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
@@ -298,8 +300,8 @@ fun MainContent() {
     val app = context.applicationContext as MessengerApplication
     val notificationHandler = remember { AndroidNotificationHandler(context) }
     val fileHandler = remember { FileHandler(context) }
-    val audioRecorder = remember { AudioRecorder(context) }
-    val audioPlayer = remember { AudioPlayer(context) }
+    val audioRecorder = remember { AndroidAudioRecorder(context) }
+    val audioPlayer = remember { AndroidAudioPlayer(context) }
     
     val sharedViewModel = remember {
         SharedMessengerViewModel(

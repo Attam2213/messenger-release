@@ -30,6 +30,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
+import io.ktor.util.decodeBase64Bytes
 
 import com.example.messenger.domain.model.ContactUiModel
 
@@ -396,7 +397,7 @@ class SharedMessengerViewModel(
                     return@launch
                 }
 
-                val bytes = io.ktor.util.decodeBase64Bytes(base64Content)
+                val bytes = base64Content.decodeBase64Bytes()
                 val fileName = "play_${Clock.System.now().toEpochMilliseconds()}.wav"
                 
                 val path = fileHandler.saveFile(bytes, fileName) ?: return@launch
