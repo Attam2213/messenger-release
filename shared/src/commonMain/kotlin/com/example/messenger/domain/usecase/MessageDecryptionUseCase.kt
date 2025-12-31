@@ -90,6 +90,30 @@ class MessageDecryptionUseCase(
                      
                      val encryptedBytes = encryptedData.decodeBase64Bytes()
                      val decryptedBytes = cryptoManager.decryptAes(encryptedBytes, aesKeyBytes)
+                     
+                     // Try to parse as MessageContent JSON wrapper first
+                     try {
+                         val decryptedStr = decryptedBytes.decodeToString()
+                         if (decryptedStr.trim().startsWith("{")) {
+                             val contentJson = Json.parseToJsonElement(decryptedStr).jsonObject
+                             if (contentJson.containsKey("text")) {
+                                 val mediaBase64 = contentJson["text"]?.jsonPrimitive?.content ?: ""
+                                 
+                                 // Extract metadata
+                                 if (contentJson.containsKey("filename")) {
+                                     extra["filename"] = contentJson["filename"]?.jsonPrimitive?.content ?: ""
+                                 }
+                                 if (contentJson.containsKey("duration")) {
+                                     extra["duration"] = (contentJson["duration"]?.jsonPrimitive?.longOrNull ?: 0L).toString()
+                                 }
+                                 
+                                 return DecryptedContent(mediaBase64, type, status, extraData = extra)
+                             }
+                         }
+                     } catch (e: Exception) {
+                         // Not JSON or parse error, fall back to treating as raw bytes
+                     }
+
                      val decryptedBase64 = decryptedBytes.encodeBase64()
                      
                      if (type == "DOCUMENT") {
