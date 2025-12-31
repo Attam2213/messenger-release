@@ -42,6 +42,8 @@ class SharedMessengerViewModel(
     private val messageDecryptionUseCase: MessageDecryptionUseCase,
     private val callHandler: CallHandler?,
     private val notificationHandler: NotificationHandler?,
+    private val audioRecorder: AudioRecorder?,
+    private val audioPlayer: AudioPlayer?,
     private val appUpdater: AppUpdater?,
     private val fileHandler: FileHandler?,
     private val scope: CoroutineScope
@@ -321,6 +323,96 @@ class SharedMessengerViewModel(
         callHandler?.initiateCall(contactPublicKey, isVideo)
     }
 
+    // Audio Handling
+    private val _isRecording = MutableStateFlow(false)
+    val isRecording: StateFlow<Boolean> = _isRecording.asStateFlow()
+    
+    private val _isPlaying = MutableStateFlow(false)
+    val isPlaying: StateFlow<Boolean> = _isPlaying.asStateFlow()
+
+    private var currentRecordingPath: String? = null
+    private var recordingStartTime: Long = 0
+
+    fun startRecording() {
+        if (audioRecorder == null || fileHandler == null) return
+        
+        scope.launch {
+            try {
+                val fileName = "rec_${Clock.System.now().toEpochMilliseconds()}.wav"
+                val path = fileHandler.getTempPath(fileName)
+                currentRecordingPath = path
+                recordingStartTime = Clock.System.now().toEpochMilliseconds()
+                
+                audioRecorder.startRecording(path)
+                _isRecording.value = true
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    fun stopAndSendAudio(contactKey: String) {
+        if (audioRecorder == null || !isRecording.value) return
+
+        scope.launch {
+            try {
+                audioRecorder.stopRecording()
+                _isRecording.value = false
+                
+                val duration = Clock.System.now().toEpochMilliseconds() - recordingStartTime
+                val path = currentRecordingPath ?: return@launch
+                
+                // Give FS a moment to flush
+                kotlinx.coroutines.delay(200)
+
+                val bytes = fileHandler?.readFile(path)
+                if (bytes != null && bytes.isNotEmpty()) {
+                    sendMessageUseCase.sendAudio(contactKey, bytes, duration)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    fun cancelRecording() {
+        if (audioRecorder == null) return
+        audioRecorder.stopRecording()
+        _isRecording.value = false
+        currentRecordingPath = null
+    }
+
+    fun playAudio(base64Content: String) {
+        if (audioPlayer == null || fileHandler == null) return
+        
+        scope.launch {
+            try {
+                if (audioPlayer.isPlaying()) {
+                    audioPlayer.stop()
+                    _isPlaying.value = false
+                    // Toggle if playing same? For now just stop.
+                    return@launch
+                }
+
+                val bytes = io.ktor.util.decodeBase64Bytes(base64Content)
+                val fileName = "play_${Clock.System.now().toEpochMilliseconds()}.wav"
+                
+                val path = fileHandler.saveFile(bytes, fileName) ?: return@launch
+                
+                audioPlayer.play(path)
+                _isPlaying.value = true
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+    
+    fun stopAudio() {
+        if (audioPlayer == null) return
+        audioPlayer.stop()
+        _isPlaying.value = false
+    }
+    
     // Auth Requests
     fun acceptAuthRequest(request: AuthRequest) {
         scope.launch {

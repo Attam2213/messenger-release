@@ -9,5 +9,7 @@ data class MessageContent(
     val replyToId: String? = null,
     val replyToAuthor: String? = null,
     val replyPreview: String? = null,
-    val filename: String? = null
+    val filename: String? = null,
+    val audioPath: String? = null,
+    val duration: Long? = null
 )

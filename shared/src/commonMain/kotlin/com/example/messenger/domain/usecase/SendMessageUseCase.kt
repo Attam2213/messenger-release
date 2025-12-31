@@ -102,6 +102,22 @@ class SendMessageUseCase(
             Result.failure(e)
         }
     }
+
+    suspend fun sendAudio(toPublicKey: String, bytes: ByteArray, duration: Long): Result<Unit> = withContext(Dispatchers.IO) {
+        try {
+            val contentBase64 = bytes.encodeBase64()
+            val content = MessageContent(text = contentBase64, duration = duration)
+            val contentJson = Json.encodeToString(content)
+            
+            queueEncryptedMessage(toPublicKey, contentJson, "AUDIO", null, null)
+            saveLocalMessage(toPublicKey, contentJson, "AUDIO", null)
+            
+            workScheduler.scheduleOneTimeSync()
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
     
     suspend fun sendGroupMedia(groupId: String, bytes: ByteArray, type: String, filename: String): Result<Unit> = withContext(Dispatchers.IO) {
         try {

@@ -11,15 +11,11 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Call
 import androidx.compose.material.icons.filled.VideoCall
 import androidx.compose.material.icons.filled.Send
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
-import com.example.messenger.viewmodel.SharedMessengerViewModel
-import com.example.messenger.shared.db.MessageEntity
-import kotlinx.coroutines.launch
+import androidx.compose.material.icons.filled.Mic
+import androidx.compose.material.icons.filled.Stop
+import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.Pause
+import com.example.messenger.domain.model.DecryptedContent
 
 @Composable
 fun ChatScreen(
@@ -44,6 +40,8 @@ fun ChatScreen(
     
     var contactName by remember { mutableStateOf("") }
     var showEditNameDialog by remember { mutableStateOf(false) }
+    
+    val isRecording by viewModel.isRecording.collectAsState()
 
     LaunchedEffect(contactKey) {
         if (!isGroup) {
@@ -122,45 +120,67 @@ fun ChatScreen(
                     .padding(8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                TextField(
-                    value = inputText,
-                    onValueChange = { inputText = it },
-                    modifier = Modifier.weight(1f),
-                    placeholder = { Text("Type a message") },
-                    colors = TextFieldDefaults.textFieldColors(
-                        backgroundColor = Color.Transparent,
-                        focusedIndicatorColor = Color.Transparent,
-                        unfocusedIndicatorColor = Color.Transparent
+                if (isRecording) {
+                    Text(
+                        text = "Recording...",
+                        color = Color.Red,
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(8.dp)
                     )
-                )
-                
-                IconButton(
-                    onClick = {
-                        if (inputText.isNotBlank()) {
-                            val textToSend = inputText
-                            inputText = ""
-                            if (isGroup) {
-                                viewModel.sendGroupMessage(contactKey, textToSend) { success, error ->
-                                    if (!success) {
-                                        scope.launch {
-                                            scaffoldState.snackbarHostState.showSnackbar("Error: ${error ?: "Unknown error"}")
+                    IconButton(onClick = { viewModel.cancelRecording() }) {
+                        Icon(Icons.Default.Stop, contentDescription = "Cancel", tint = Color.Gray)
+                    }
+                    IconButton(onClick = { viewModel.stopAndSendAudio(contactKey) }) {
+                        Icon(Icons.Default.Send, contentDescription = "Send Audio", tint = MaterialTheme.colors.primary)
+                    }
+                } else {
+                    TextField(
+                        value = inputText,
+                        onValueChange = { inputText = it },
+                        modifier = Modifier.weight(1f),
+                        placeholder = { Text("Type a message") },
+                        colors = TextFieldDefaults.textFieldColors(
+                            backgroundColor = Color.Transparent,
+                            focusedIndicatorColor = Color.Transparent,
+                            unfocusedIndicatorColor = Color.Transparent
+                        )
+                    )
+                    
+                    if (inputText.isBlank()) {
+                        IconButton(onClick = { viewModel.startRecording() }) {
+                            Icon(Icons.Default.Mic, contentDescription = "Record", tint = MaterialTheme.colors.primary)
+                        }
+                    } else {
+                        IconButton(
+                            onClick = {
+                                if (inputText.isNotBlank()) {
+                                    val textToSend = inputText
+                                    inputText = ""
+                                    if (isGroup) {
+                                        viewModel.sendGroupMessage(contactKey, textToSend) { success, error ->
+                                            if (!success) {
+                                                scope.launch {
+                                                    scaffoldState.snackbarHostState.showSnackbar("Error: ${error ?: "Unknown error"}")
+                                                }
+                                            }
+                                        }
+                                    } else {
+                                        viewModel.sendMessage(contactKey, textToSend, null) { success, error ->
+                                             if (!success) {
+                                                 scope.launch {
+                                                     scaffoldState.snackbarHostState.showSnackbar("Error: ${error ?: "Unknown error"}")
+                                                 }
+                                             }
                                         }
                                     }
                                 }
-                            } else {
-                                viewModel.sendMessage(contactKey, textToSend, null) { success, error ->
-                                     if (!success) {
-                                         scope.launch {
-                                             scaffoldState.snackbarHostState.showSnackbar("Error: ${error ?: "Unknown error"}")
-                                         }
-                                     }
-                                }
-                            }
+                            },
+                            enabled = inputText.isNotBlank()
+                        ) {
+                            Icon(Icons.Default.Send, contentDescription = "Send", tint = MaterialTheme.colors.primary)
                         }
-                    },
-                    enabled = inputText.isNotBlank()
-                ) {
-                    Icon(Icons.Default.Send, contentDescription = "Send", tint = MaterialTheme.colors.primary)
+                    }
                 }
             }
         }
@@ -218,16 +238,18 @@ fun MessageBubble(
     isMe: Boolean,
     viewModel: SharedMessengerViewModel
 ) {
-    var decryptedContent by remember { mutableStateOf(message.encryptedContent) }
+    var decryptedContent by remember { mutableStateOf<DecryptedContent?>(null) }
+    var rawContent by remember { mutableStateOf(message.encryptedContent) }
     
     LaunchedEffect(message.encryptedContent, message.fromPublicKey) {
         try {
              val decrypted = viewModel.decryptMessage(message.encryptedContent, message.fromPublicKey)
-             if (decrypted.content.isNotEmpty()) {
-                 decryptedContent = decrypted.content
+             decryptedContent = decrypted
+             if (decrypted.type == "TEXT") {
+                rawContent = decrypted.content
              }
         } catch (e: Exception) {
-            decryptedContent = "[Encrypted]"
+            rawContent = "[Encrypted]"
         }
     }
 
@@ -243,10 +265,34 @@ fun MessageBubble(
             contentColor = if (isMe) Color.White else Color.Black,
             elevation = 1.dp
         ) {
-            Text(
-                text = decryptedContent,
-                modifier = Modifier.padding(8.dp)
-            )
+            Column(modifier = Modifier.padding(8.dp)) {
+                if (decryptedContent?.type == "AUDIO") {
+                    val isPlaying by viewModel.isPlaying.collectAsState()
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        IconButton(
+                            onClick = { 
+                                if (isPlaying) viewModel.stopAudio() 
+                                else viewModel.playAudio(decryptedContent?.content ?: "")
+                            }
+                        ) {
+                            Icon(
+                                imageVector = if (isPlaying) Icons.Default.Pause else Icons.Default.PlayArrow,
+                                contentDescription = if (isPlaying) "Stop" else "Play",
+                                tint = if (isMe) Color.White else Color.Black
+                            )
+                        }
+                        Text(
+                            text = "Voice Message",
+                            modifier = Modifier.padding(start = 8.dp)
+                        )
+                    }
+                } else {
+                    Text(
+                        text = rawContent,
+                        modifier = Modifier.padding(0.dp)
+                    )
+                }
+            }
         }
         Text(
             text = if (isMe) "Me" else message.fromPublicKey.take(8),

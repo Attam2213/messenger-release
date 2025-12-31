@@ -58,4 +58,33 @@ actual class FileHandler actual constructor(context: Any?) {
             }
         }
     }
+
+    actual suspend fun readFile(filePath: String): ByteArray? {
+        return withContext(Dispatchers.IO) {
+            try {
+                val file = File(filePath)
+                if (file.exists()) file.readBytes() else null
+            } catch (e: Exception) {
+                e.printStackTrace()
+                null
+            }
+        }
+    }
+
+    actual suspend fun saveFile(bytes: ByteArray, fileName: String): String? {
+        return withContext(Dispatchers.IO) {
+            try {
+                val file = File(ctx.cacheDir, fileName)
+                file.writeBytes(bytes)
+                file.absolutePath
+            } catch (e: Exception) {
+                e.printStackTrace()
+                null
+            }
+        }
+    }
+
+    actual fun getTempPath(fileName: String): String {
+        return File(ctx.cacheDir, fileName).absolutePath
+    }
 }
