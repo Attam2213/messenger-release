@@ -1,8 +1,8 @@
 {
-  "version": "1.0.9",
-  "latestVersion": "1.0.9",
-  "latestVersionCode": 9,
+  "version": "1.1.0",
+  "latestVersion": "1.1.0",
+  "latestVersionCode": 10,
   "downloadUrl": "https://github.com/Attam2213/messenger-release/raw/main/messenger.apk",
-  "changelog": "Media sharing (images, videos, files). Voice messages enhancements: recording timer, seek, speed control (0.5x - 2x). Version 1.0.9",
-  "releaseNotes": "Media sharing (images, videos, files). Voice messages enhancements: recording timer, seek, speed control (0.5x - 2x). Version 1.0.9"
+  "changelog": "Media sharing improvements, crash fixes, and enhanced error handling. Version 1.1.0",
+  "releaseNotes": "Media sharing improvements, crash fixes, and enhanced error handling. Version 1.1.0"
 }
