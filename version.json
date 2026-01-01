@@ -1,8 +1,8 @@
 {
-  "version": "1.1.1",
-  "latestVersion": "1.1.1",
-  "latestVersionCode": 11,
+  "version": "1.1.2",
+  "latestVersion": "1.1.2",
+  "latestVersionCode": 12,
   "downloadUrl": "https://github.com/Attam2213/messenger-release/raw/main/messenger.apk",
-  "changelog": "Fix: App crash on large media files. Fix: Media metadata (filename/duration) missing. Fix: File:unknown display issue. Version 1.1.1",
-  "releaseNotes": "Fix: App crash on large media files. Fix: Media metadata (filename/duration) missing. Fix: File:unknown display issue. Version 1.1.1"
+  "changelog": "Fix: Crash when sending large files. Fix: Media metadata issues. Fix: App crash on large media files. Version 1.1.2",
+  "releaseNotes": "Fix: Crash when sending large files. Fix: Media metadata issues. Fix: App crash on large media files. Version 1.1.2"
 }
