@@ -1,5 +1,5 @@
 {
-  "version": "1.1.5",
+  "version": "1.1.6",
   "downloadUrl": "https://raw.githubusercontent.com/Attam2213/messenger-release/main/messenger.apk",
-  "changelog": "Update to version 1.1.5: Fixed media sending and 'unknown' display error. Added download support."
+  "changelog": "Update to version 1.1.6: Fixed file opening. Added 'Open' button for downloaded media."
 }
