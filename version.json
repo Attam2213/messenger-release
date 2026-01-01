@@ -1,8 +1,5 @@
 {
-  "version": "1.1.2",
-  "latestVersion": "1.1.2",
-  "latestVersionCode": 12,
-  "downloadUrl": "https://github.com/Attam2213/messenger-release/raw/main/messenger.apk",
-  "changelog": "Fix: Crash when sending large files. Fix: Media metadata issues. Fix: App crash on large media files. Version 1.1.2",
-  "releaseNotes": "Fix: Crash when sending large files. Fix: Media metadata issues. Fix: App crash on large media files. Version 1.1.2"
+  "version": "1.1.3",
+  "downloadUrl": "https://raw.githubusercontent.com/Attam2213/messenger-release/main/messenger.apk",
+  "changelog": "Update to version 1.1.3: Contact management (edit/delete), bug fixes, desktop QR fix."
 }
