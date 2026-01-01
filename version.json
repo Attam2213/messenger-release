@@ -1,5 +1,5 @@
 {
-  "version": "1.1.6",
+  "version": "1.1.7",
   "downloadUrl": "https://raw.githubusercontent.com/Attam2213/messenger-release/main/messenger.apk",
-  "changelog": "Update to version 1.1.6: Fixed file opening. Added 'Open' button for downloaded media."
+  "changelog": "Update to version 1.1.7: Fixed media display in chat (images/videos showing as text). Added download/open buttons for all media types."
 }
