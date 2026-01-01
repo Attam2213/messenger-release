@@ -1,6 +1,6 @@
 {
-  "latestVersionCode": 5,
-  "latestVersion": "1.0.5",
+  "latestVersionCode": 7,
+  "latestVersion": "1.0.7",
   "downloadUrl": "https://github.com/Attam2213/messenger-release/raw/main/messenger.apk",
-  "releaseNotes": "Voice messages added"
+  "releaseNotes": "Voice messages added and version bumped to 1.0.7"
 }
