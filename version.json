@@ -1,5 +1,5 @@
 {
-  "version": "1.1.8",
+  "version": "1.1.9",
   "downloadUrl": "https://raw.githubusercontent.com/Attam2213/messenger-release/main/messenger.apk",
-  "changelog": "Update to version 1.1.8: Fixed critical bug where media files were not detected correctly in existing messages."
+  "changelog": "Update to version 1.1.9: Added ability to cancel voice message recording."
 }
