@@ -1,5 +1,5 @@
 {
-  "version": "1.1.9",
+  "version": "1.1.10",
   "downloadUrl": "https://raw.githubusercontent.com/Attam2213/messenger-release/main/messenger.apk",
-  "changelog": "Update to version 1.1.9: Added ability to cancel voice message recording."
+  "changelog": "Update to version 1.1.10: Added ability to share backup via Bluetooth and other apps."
 }
