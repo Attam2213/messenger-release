@@ -1,6 +1,5 @@
 {
-  "version": "1.1.23",
-  "build": 33,
-  "url": "https://github.com/Attam2213/messenger-release/raw/main/messenger.apk",
-  "notes": "Feature: Added logout confirmation dialog. Improved update check reliability. Version bumped to fix update detection."
+  "version": "1.1.24",
+  "downloadUrl": "https://raw.githubusercontent.com/Attam2213/messenger-release/main/messenger.apk",
+  "changelog": "Update to version 1.1.24: Added message editing, delete for everyone, reactions."
 }
