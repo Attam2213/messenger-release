@@ -1,5 +1,5 @@
 {
-  "version": "1.1.24",
+  "version": "1.1.25",
   "downloadUrl": "https://raw.githubusercontent.com/Attam2213/messenger-release/main/messenger.apk",
-  "changelog": "Update to version 1.1.24: Added message editing, delete for everyone, reactions."
+  "changelog": "Update to version 1.1.25: Fix crash when opening chat."
 }
