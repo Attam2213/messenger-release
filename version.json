@@ -1,5 +1,5 @@
 {
-  "version": "1.1.26",
+  "version": "1.1.28",
   "downloadUrl": "https://raw.githubusercontent.com/Attam2213/messenger-release/main/messenger.apk",
-  "changelog": "Update to version 1.1.26: Improved message context menu with emoji row and better delete confirmation dialog."
+  "changelog": "Update to version 1.1.28: Bug fixes and performance improvements."
 }
