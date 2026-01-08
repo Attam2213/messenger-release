@@ -1,6 +1,6 @@
 {
-  "version": "1.2.2",
-  "build": 43,
+  "version": "1.2.3",
+  "build": 44,
   "downloadUrl": "https://github.com/Attam2213/messenger-release/raw/main/messenger.apk",
-  "changelog": "Update to version 1.2.2: \n- Fixed cross-device sync for reactions, edits, and deletions.\n- Fixed Outbox unique constraint issue."
+  "changelog": "Update to version 1.2.3: \n- Fixed critical bug where reactions, edits, and deletes were not syncing for 1-on-1 messages due to ID mismatch."
 }
