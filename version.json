@@ -1,6 +1,6 @@
 {
-  "version": "1.1.28",
-  "build": 38,
-  "downloadUrl": "https://raw.githubusercontent.com/Attam2213/messenger-release/main/messenger.apk",
-  "changelog": "Update to version 1.1.28: Bug fixes and performance improvements."
+  "version": "1.1.29",
+  "build": 39,
+  "downloadUrl": "https://github.com/Attam2213/messenger-release/raw/main/messenger.apk",
+  "changelog": "Update to version 1.1.29: \n- Added option to skip device security check on startup.\n- Improved onboarding experience.\n- Bug fixes and improvements."
 }
