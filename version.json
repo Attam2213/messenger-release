@@ -1,7 +1,11 @@
 {
+  "version": "1.2.4",
+  "build": 45,
   "latestVersion": "1.2.4",
   "versionCode": 45,
-  "releaseNotes": "Fixes: Edit message display issue, Reaction visibility improvements, Outbox delivery fixes.",
+  "url": "https://raw.githubusercontent.com/Attam2213/messenger-release/main/app-release.apk",
   "downloadUrl": "https://raw.githubusercontent.com/Attam2213/messenger-release/main/app-release.apk",
+  "notes": "Fixes: Edit message display issue, Reaction visibility improvements, Outbox delivery fixes.",
+  "releaseNotes": "Fixes: Edit message display issue, Reaction visibility improvements, Outbox delivery fixes.",
   "forceUpdate": false
 }
