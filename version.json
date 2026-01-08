@@ -1,6 +1,6 @@
 {
-  "version": "1.1.23",
-  "build": 33,
-  "url": "https://github.com/Attam2213/messenger-release/raw/main/messenger.apk",
-  "notes": "Feature: Added logout confirmation dialog. Improved update check reliability. Version bumped to fix update detection."
+  "version": "1.2.0",
+  "build": 41,
+  "downloadUrl": "https://github.com/Attam2213/messenger-release/raw/main/messenger.apk",
+  "changelog": "Update to version 1.2.0: \n- Added Video Call support (Beta).\n- Fixed connection stability issues.\n- Improved device security settings."
 }
