@@ -1,5 +1,6 @@
 {
-  "version": "1.1.25",
-  "downloadUrl": "https://raw.githubusercontent.com/Attam2213/messenger-release/main/messenger.apk",
-  "changelog": "Update to version 1.1.25: Fix crash when opening chat."
+  "version": "1.1.30",
+  "build": 40,
+  "downloadUrl": "https://github.com/Attam2213/messenger-release/raw/main/messenger.apk",
+  "changelog": "Update to version 1.1.30: \n- Added option to enable/disable device security integration in Settings.\n- Added device security setup step in Onboarding.\n- Fixed security check logic to respect user preference."
 }
