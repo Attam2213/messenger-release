@@ -1,11 +1,11 @@
 {
-  "version": "1.2.6",
-  "build": 47,
-  "latestVersion": "1.2.6",
-  "versionCode": 47,
+  "version": "1.2.7",
+  "build": 48,
+  "latestVersion": "1.2.7",
+  "versionCode": 48,
   "url": "https://raw.githubusercontent.com/Attam2213/messenger-release/main/app-release.apk",
   "downloadUrl": "https://raw.githubusercontent.com/Attam2213/messenger-release/main/app-release.apk",
-  "notes": "Features: Unique avatars for users, Contact names in chat, UI improvements.",
-  "releaseNotes": "Features: Unique avatars for users, Contact names in chat, UI improvements.",
+  "notes": "Features: Smoother chat loading, auto-scroll to unread messages.",
+  "releaseNotes": "Features: Smoother chat loading, auto-scroll to unread messages.",
   "forceUpdate": false
 }
