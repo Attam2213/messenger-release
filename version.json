@@ -1,11 +1,11 @@
 {
-  "version": "1.2.4",
-  "build": 45,
-  "latestVersion": "1.2.4",
-  "versionCode": 45,
+  "version": "1.2.5",
+  "build": 46,
+  "latestVersion": "1.2.5",
+  "versionCode": 46,
   "url": "https://raw.githubusercontent.com/Attam2213/messenger-release/main/app-release.apk",
   "downloadUrl": "https://raw.githubusercontent.com/Attam2213/messenger-release/main/app-release.apk",
-  "notes": "Fixes: Edit message display issue, Reaction visibility improvements, Outbox delivery fixes.",
-  "releaseNotes": "Fixes: Edit message display issue, Reaction visibility improvements, Outbox delivery fixes.",
+  "notes": "Fixes: WebSocket connection stability (403 Forbidden), Edit message display, Reaction visibility.",
+  "releaseNotes": "Fixes: WebSocket connection stability (403 Forbidden), Edit message display, Reaction visibility.",
   "forceUpdate": false
 }
