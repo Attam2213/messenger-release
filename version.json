@@ -1,6 +1,6 @@
 {
-  "version": "1.2.0",
-  "build": 41,
+  "version": "1.2.1",
+  "build": 42,
   "downloadUrl": "https://github.com/Attam2213/messenger-release/raw/main/messenger.apk",
-  "changelog": "Update to version 1.2.0: \n- Added Video Call support (Beta).\n- Fixed connection stability issues.\n- Improved device security settings."
+  "changelog": "Update to version 1.2.1: \n- Fixed cross-device sync for reactions, edits, and deletions."
 }
