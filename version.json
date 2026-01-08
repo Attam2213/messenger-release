@@ -1,11 +1,6 @@
 {
-  "version": "1.2.7",
-  "build": 48,
-  "latestVersion": "1.2.7",
-  "versionCode": 48,
-  "url": "https://raw.githubusercontent.com/Attam2213/messenger-release/main/app-release.apk",
-  "downloadUrl": "https://raw.githubusercontent.com/Attam2213/messenger-release/main/app-release.apk",
-  "notes": "Features: Smoother chat loading, auto-scroll to unread messages.",
-  "releaseNotes": "Features: Smoother chat loading, auto-scroll to unread messages.",
-  "forceUpdate": false
+  "version": "1.2.8",
+  "build": 50,
+  "downloadUrl": "https://github.com/Attam2213/messenger-release/raw/main/messenger.apk",
+  "changelog": "Update to version 1.2.8: \n- Added message status indicators (Sent, Delivered, Read)."
 }
