@@ -1,11 +1,11 @@
 {
-  "version": "1.2.5",
-  "build": 46,
-  "latestVersion": "1.2.5",
-  "versionCode": 46,
+  "version": "1.2.6",
+  "build": 47,
+  "latestVersion": "1.2.6",
+  "versionCode": 47,
   "url": "https://raw.githubusercontent.com/Attam2213/messenger-release/main/app-release.apk",
   "downloadUrl": "https://raw.githubusercontent.com/Attam2213/messenger-release/main/app-release.apk",
-  "notes": "Fixes: WebSocket connection stability (403 Forbidden), Edit message display, Reaction visibility.",
-  "releaseNotes": "Fixes: WebSocket connection stability (403 Forbidden), Edit message display, Reaction visibility.",
+  "notes": "Features: Unique avatars for users, Contact names in chat, UI improvements.",
+  "releaseNotes": "Features: Unique avatars for users, Contact names in chat, UI improvements.",
   "forceUpdate": false
 }
