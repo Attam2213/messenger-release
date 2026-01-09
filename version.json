@@ -1,6 +1,6 @@
 {
-  "version": "1.2.8",
-  "build": 50,
+  "version": "1.2.9",
+  "build": 51,
   "downloadUrl": "https://github.com/Attam2213/messenger-release/raw/main/messenger.apk",
-  "changelog": "Update to version 1.2.8: \n- Added message status indicators (Sent, Delivered, Read)."
+  "changelog": "Update to version 1.2.9: \n- Fixed READ_ACK status indicators."
 }
