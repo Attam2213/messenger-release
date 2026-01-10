@@ -1,6 +1,6 @@
 {
-  "version": "1.4.0",
-  "build": 53,
+  "version": "1.4.1",
+  "build": 54,
   "downloadUrl": "https://github.com/Attam2213/messenger-release/raw/main/messenger.apk",
-  "changelog": "Update to version 1.4.0: \n- Pinned messages in chat.\n- Group management (leave group, remove members).\n- Date headers in chat.\n- Sender names in group chats."
+  "changelog": "Update to version 1.4.1: \n- Fixed group creator permissions (remove members).\n- Pinned messages in chat.\n- Group management (leave group).\n- Date headers in chat.\n- Sender names in group chats."
 }
